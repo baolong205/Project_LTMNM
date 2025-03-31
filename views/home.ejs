@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quán Cà Phê</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Thiết lập nền trang với ảnh từ Internet */
+      body {
+        background: url('/image/background_home.jpg') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Lớp phủ mờ để làm rõ nội dung trên nền */
+      .overlay {
+        background-color: rgba(0, 0, 0, 0.5); /* Màu đen mờ 50% */
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Thẻ chứa nội dung chính */
+      .coffee-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        text-align: center;
+      }
+
+      /* Nút bấm có màu cà phê */
+      .btn-custom {
+        background-color: #6f4e37; /* Màu nâu cà phê */
+        border-color: #6f4e37;
+        color: white;
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      /* Hiệu ứng hover cho nút bấm */
+      .btn-custom:hover {
+        background-color: #8b5e3c; /* Màu nâu nhạt hơn */
+        border-color: #8b5e3c;
+        transform: translateY(-2px);
+      }
+
+      /* Tiêu đề nổi bật */
+      h1 {
+        color: #070707;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-family: "Arial", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay">
+      <div class="container mt-5">
+        <div class="coffee-card mt-5">
+          <h1 class="text-center mb-4">Chào mừng đến với Quán Cà Phê ☕</h1>
+          <div class="text-center">
+            <a href="/auth/login" class="btn btn-custom btn-lg">
+              <span class="me-2">🔑</span> Đăng Nhập
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

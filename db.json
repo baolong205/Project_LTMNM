@@ -1,0 +1,168 @@
+{
+  "menuItems": [
+    {
+      "code": "CF01",
+      "name": "Cà phê sữa",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 25000
+    },
+    {
+      "code": "CF02",
+      "name": "Cà phê đen",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 20000
+    },
+    {
+      "code": "CF03",
+      "name": "Cà phê Americano",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000
+    },
+    {
+      "code": "CF04",
+      "name": "Cà phê Espresso",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000
+    },
+    {
+      "code": "TR01",
+      "name": "Trà đào",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000
+    },
+    {
+      "code": "TR02",
+      "name": "Trà chanh mật ong",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 28000
+    },
+    {
+      "code": "TS01",
+      "name": "Trà sữa trân châu",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000
+    },
+    {
+      "code": "TS02",
+      "name": "Trà sữa matcha",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 38000
+    },
+    {
+      "code": "ST01",
+      "name": "Sinh tố bơ",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 40000
+    },
+    {
+      "code": "ST02",
+      "name": "Sinh tố xoài",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 38000
+    },
+    {
+      "code": "ST03",
+      "name": "Sinh tố dâu",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 39000
+    },
+    {
+      "code": "NGK01",
+      "name": "Soda việt quất",
+      "group": "Nước giải khát",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 32000
+    },
+    {
+      "code": "NE01",
+      "name": "Nước cam ép",
+      "group": "Nước ép",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000
+    },
+    {
+      "code": "NE02",
+      "name": "Nước ép dưa hấu",
+      "group": "Nước ép",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 34000
+    },
+    {
+      "code": "NE03",
+      "name": "Nước ép cà rốt",
+      "group": "Nước ép",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 32000
+    },
+    {
+      "code": "TA01",
+      "name": "Bánh mì sandwich",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 20000
+    },
+    {
+      "code": "TA02",
+      "name": "Bánh croissant",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Cái",
+      "price": 25000
+    },
+    {
+      "code": "TA03",
+      "name": "Bánh tiramisu",
+      "group": "Bánh ngọt",
+      "category": "Thức ăn",
+      "unit": "Miếng",
+      "price": 45000
+    },
+    {
+      "code": "TA04",
+      "name": "Bánh flan",
+      "group": "Bánh ngọt",
+      "category": "Thức ăn",
+      "unit": "Cái",
+      "price": 30000
+    },
+    {
+      "code": "TA05",
+      "name": "Khoai tây chiên",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 28000
+    }
+  ],
+  "users": [
+    { "username": "admin", "password": "123456", "role": "admin" },
+    { "username": "staff", "password": "123456", "role": "staff" }
+  ]
+}

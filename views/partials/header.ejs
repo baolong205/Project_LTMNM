@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Quản lý Cafe</title>
+    <style>
+        /* Tùy chỉnh màu nền nâu cà phê */
+        .bg-brown {
+            background-color: #5c4033 !important;
+        }
+
+        /* Tinh chỉnh chữ thương hiệu */
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #f4e1d2 !important; /* Be nhạt khi hover */
+        }
+
+        /* Tinh chỉnh liên kết */
+        .nav-link {
+            color: #fff !important;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #f4e1d2 !important; /* Be nhạt khi hover */
+        }
+
+        /* Tinh chỉnh menu thả xuống */
+        .dropdown-menu {
+            background-color: #5c4033 !important;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #7a5a4b !important; /* Nâu nhạt hơn */
+            color: #f4e1d2 !important;
+        }
+
+        .dropdown-item.text-danger {
+            color: #dc3545 !important; /* Đỏ của Bootstrap */
+        }
+
+        .dropdown-item.text-danger:hover {
+            background-color: #dc3545 !important;
+            color: #fff !important;
+        }
+
+        /* Tùy chỉnh nút toggler */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .navbar-nav {
+                text-align: center;
+                padding: 1rem 0;
+            }
+            .dropdown-menu {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-brown">
+        <div class="container">
+            <a class="navbar-brand" href="/">☕ Quản lý Cafe</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">🏠 Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/menu">🍽️ Menu</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order/">📜 Đặt món</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/payment">💳 Thanh toán</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history">📖 Lịch sử đơn hàng</a>
+                    </li>
+                    <% if (session && session.user) { %>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="/auth/logout">🚪 <%= session.user.username %> (Đăng xuất)</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/login">🔑 Đăng nhập</a>
+                        </li>
+                    <% } %>                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
