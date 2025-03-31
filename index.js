@@ -7,7 +7,7 @@ const connectDB = require('./config/db'); // Kết nối MongoDB
 // Import routes
 const menuRoutes = require('./routes/menu');
 const authRoutes = require('./routes/auth');
-const orderRoutes = require('./routes/order');
+const orderRouter = require('./routes/order');
 const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', homeRoutes);  // ✅ Trang chính
 app.use('/menu', menuRoutes);
 app.use('/auth', authRoutes);
-app.use('/order', orderRoutes);
+app.use('/order', orderRouter);
 app.use('/payment', paymentRoutes);
 app.use('/admin', adminRoutes);
 

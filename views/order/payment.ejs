@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+    <h3 class="text-center">💳 Thanh toán</h3>
+
+    <% if (cart && cart.length > 0) { %>
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tên món</th>
+                    <th>Số lượng</th>
+                    <th>Giá (VND)</th>
+                    <th>Thành tiền (VND)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% cart.forEach(item => { %>
+                    <tr>
+                        <td><%= item.name %></td>
+                        <td><%= item.quantity %></td>
+                        <td><%= item.price.toLocaleString('vi-VN') %></td>
+                        <td><%= (item.price * item.quantity).toLocaleString('vi-VN') %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <h4 class="text-end">Tổng tiền: <%= total.toLocaleString('vi-VN') %> VND</h4>
+
+        <form action="/payment/confirm" method="POST">
+            <button type="submit" class="btn btn-primary w-100">Xác nhận thanh toán</button>
+        </form>
+    <% } else { %>
+        <div class="alert alert-warning text-center">❌ Giỏ hàng trống.</div>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

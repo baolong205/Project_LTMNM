@@ -1,36 +1,37 @@
 const express = require('express');
 const router = express.Router();
 
-// Hiển thị trang thanh toán
-router.get('/', (req, res) => {
-    // Nếu không có người dùng đăng nhập hoặc giỏ hàng trống, điều hướng đến trang chủ
-    if (!req.session.user || !req.session.cart || req.session.cart.length === 0) {
-        return res.redirect('/order');  // Điều hướng về trang chủ
+// Hiển thị trang thanh toán theo bàn
+router.get('/:tableNumber', (req, res) => {
+    const { tableNumber } = req.params;
+
+    if (!req.session.carts || !req.session.carts[tableNumber] || req.session.carts[tableNumber].length === 0) {
+        return res.redirect('/order'); // Nếu bàn chưa có đơn hàng, quay lại trang order
     }
 
-    // Tính tổng tiền giỏ hàng
-    let total = req.session.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    // Tính tổng tiền giỏ hàng của bàn
+    let total = req.session.carts[tableNumber].reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     // Render trang thanh toán
-    res.render('order/checkout', { cart: req.session.cart, total: total, error: null });
+    res.render('order/checkout', { tableNumber, cart: req.session.carts[tableNumber], total });
 });
 
-// Xử lý xác nhận thanh toán
-router.post('/confirm', (req, res) => {
-    // Nếu không có người dùng đăng nhập hoặc giỏ hàng trống, điều hướng đến trang chủ
-    if (!req.session.user || !req.session.cart || req.session.cart.length === 0) {
-        return res.redirect('/');
+// Xác nhận thanh toán cho bàn cụ thể
+router.post('/confirm/:tableNumber', (req, res) => {
+    const { tableNumber } = req.params;
+
+    if (!req.session.carts || !req.session.carts[tableNumber] || req.session.carts[tableNumber].length === 0) {
+        return res.redirect('/order');
     }
 
-    // Tính tổng tiền giỏ hàng
-    let total = req.session.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    // Tính tổng tiền giỏ hàng của bàn
+    let total = req.session.carts[tableNumber].reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    // Xử lý thanh toán (giả sử thanh toán thành công)
-    // Sau khi thanh toán thành công, xóa giỏ hàng
-    req.session.cart = [];
+    // Xóa giỏ hàng của bàn sau khi thanh toán
+    delete req.session.carts[tableNumber];
 
-    // Hiển thị thông báo thanh toán thành công
-    res.render('order/confirmation', { total: total });
+    // Render trang xác nhận thanh toán
+    res.render('order/confirmation', { tableNumber, total });
 });
 
 module.exports = router;

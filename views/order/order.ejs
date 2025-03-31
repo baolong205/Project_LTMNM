@@ -1,27 +1,22 @@
 <%- include('../partials/header') %>
 
 <style>
-  /* Căn giữa toàn bộ chữ */
   .container {
       text-align: center;
   }
-
   .table th, .table td {
       text-align: center !important;
       vertical-align: middle !important;
   }
-
   h3, h4 {
       text-align: center;
   }
-
   #tableContainer {
       text-align: center;
   }
 </style>
 
 <div class="container mt-4 d-flex">
-  <!-- Khu vực hiển thị menu -->
   <div id="menuContainer" class="flex-grow-1">
     <h3>
       📜 Menu - <span id="selectedTable">Chọn bàn</span>
@@ -48,7 +43,6 @@
     </div>
   </div>
 
-  <!-- Danh sách bàn -->
   <div id="tableContainer" class="d-grid gap-2 ms-auto" 
        style="display: grid; grid-template-columns: repeat(2, 1fr); width: 200px">
     <h4 style="grid-column: span 2">🪑 Chọn bàn</h4>
@@ -63,49 +57,73 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".table-btn").forEach((button) => {
-      button.addEventListener("click", function () {
-        const tableNumber = this.getAttribute("data-table");
-        document.getElementById("selectedTable").innerText = `Bàn ${tableNumber}`;
+        button.addEventListener("click", function () {
+            const tableNumber = this.getAttribute("data-table");
+            document.getElementById("selectedTable").innerText = `Bàn ${tableNumber}`;
 
-        // Gọi API để lấy menu cho bàn đã chọn
-        fetch(`/order/menu/${tableNumber}`)
-          .then((response) => response.json())
-          .then((data) => {
-            renderMenu(data);
-          })
-          .catch((error) => console.error("Lỗi tải menu:", error));
-      });
+            fetch(`/order/menu/${tableNumber}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    renderMenu(data, tableNumber);
+                })
+                .catch((error) => console.error("Lỗi tải menu:", error));
+        });
     });
 
-    function renderMenu(menuItems) {
-      const menuTable = document.getElementById("menuTableBody");
-      menuTable.innerHTML = "";
+    function renderMenu(menuItems, tableNumber) {
+        const menuTable = document.getElementById("menuTableBody");
+        menuTable.innerHTML = "";
 
-      if (!Array.isArray(menuItems) || menuItems.length === 0) {
-        menuTable.innerHTML = `<tr><td colspan='5' class='text-danger'>❌ Không có món nào trong menu.</td></tr>`;
-        return;
-      }
+        if (!Array.isArray(menuItems) || menuItems.length === 0) {
+            menuTable.innerHTML = `<tr><td colspan='5' class='text-danger'>❌ Không có món nào trong menu.</td></tr>`;
+            return;
+        }
 
-      menuItems.forEach((item) => {
-        menuTable.innerHTML += `
-          <tr>
-            <td>${item.category}</td>
-            <td>${item.name}</td>
-            <td class="fw-bold">${item.price.toLocaleString('vi-VN')} VND</td>
-            <td class="d-flex justify-content-center">
-                <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item._id}" style="width: 80px;">
-            </td>
-            <td>
-              <button class="btn btn-success add-to-cart" data-id="${item._id}" 
-                      data-name="${item.name}" data-price="${item.price}">
-                ➕ Thêm
-              </button>
-            
-            </td>
-          </tr>`;
-      });
+        menuItems.forEach((item) => {
+            menuTable.innerHTML += `
+                <tr>
+                    <td>${item.category}</td>
+                    <td>${item.name}</td>
+                    <td class="fw-bold">${item.price.toLocaleString('vi-VN')} VND</td>
+                    <td class="d-flex justify-content-center">
+                        <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item._id}" style="width: 80px;">
+                    </td>
+                    <td>
+                        <button class="btn btn-success add-to-cart" data-id="${item._id}" 
+                                data-name="${item.name}" data-price="${item.price}" data-table="${tableNumber}">
+                            ➕ Thêm
+                        </button>
+                    </td>
+                </tr>`;
+        });
+
+        document.querySelectorAll(".add-to-cart").forEach((button) => {
+            button.addEventListener("click", function () {
+                const itemId = this.getAttribute("data-id");
+                const tableNumber = this.getAttribute("data-table");
+                const quantityInput = document.querySelector(`.quantity[data-id='${itemId}']`);
+                const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+
+                fetch("/order/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ itemId, quantity, tableNumber })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("✅ Đã thêm vào giỏ hàng cho bàn " + tableNumber + "!");
+                    } else {
+                        alert("❌ Thêm thất bại: " + data.error);
+                    }
+                })
+                .catch(error => console.error("❌ Lỗi khi thêm vào giỏ hàng:", error));
+            });
+        });
     }
-  });
+});
 </script>
 
 <%- include('../partials/footer') %>
