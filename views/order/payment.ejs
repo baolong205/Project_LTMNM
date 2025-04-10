@@ -26,7 +26,7 @@
         </table>
         <h4 class="text-end">Tổng tiền: <%= total.toLocaleString('vi-VN') %> VND</h4>
 
-        <form action="/payment/confirm" method="POST">
+        <form action="/payment/confirm/<%= tableNumber %>" method="POST">
             <button type="submit" class="btn btn-primary w-100">Xác nhận thanh toán</button>
         </form>
     <% } else { %>

@@ -1,37 +1,54 @@
 const express = require('express');
 const router = express.Router();
 
-// Hiển thị trang thanh toán theo bàn
+// 🧾 Hiển thị danh sách các bàn có món đã đặt
+router.get('/', (req, res) => {
+    const carts = req.session.carts || {};
+    const tableNumbers = Object.keys(carts).filter(table => carts[table].length > 0);
+
+    res.render('order/payment_list', {
+        tableNumbers,
+        session: req.session // truyền session để dùng trong header
+    });
+});
+
+// 💳 Hiển thị trang thanh toán cho bàn cụ thể
 router.get('/:tableNumber', (req, res) => {
     const { tableNumber } = req.params;
 
     if (!req.session.carts || !req.session.carts[tableNumber] || req.session.carts[tableNumber].length === 0) {
-        return res.redirect('/order'); // Nếu bàn chưa có đơn hàng, quay lại trang order
+        return res.redirect('/payment'); // Nếu không có món -> quay lại danh sách bàn
     }
 
-    // Tính tổng tiền giỏ hàng của bàn
-    let total = req.session.carts[tableNumber].reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const cart = req.session.carts[tableNumber];
+    const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    // Render trang thanh toán
-    res.render('order/checkout', { tableNumber, cart: req.session.carts[tableNumber], total });
+    res.render('order/payment', {
+        tableNumber,
+        cart,
+        total,
+        session: req.session
+    });
 });
 
-// Xác nhận thanh toán cho bàn cụ thể
+// ✅ Xác nhận thanh toán cho bàn cụ thể
 router.post('/confirm/:tableNumber', (req, res) => {
     const { tableNumber } = req.params;
 
     if (!req.session.carts || !req.session.carts[tableNumber] || req.session.carts[tableNumber].length === 0) {
-        return res.redirect('/order');
+        return res.redirect('/payment');
     }
 
-    // Tính tổng tiền giỏ hàng của bàn
-    let total = req.session.carts[tableNumber].reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const total = req.session.carts[tableNumber].reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    // Xóa giỏ hàng của bàn sau khi thanh toán
+    // Xóa giỏ hàng sau khi thanh toán
     delete req.session.carts[tableNumber];
 
-    // Render trang xác nhận thanh toán
-    res.render('order/confirmation', { tableNumber, total });
+    res.render('order/confirmation', {
+        tableNumber,
+        total,
+        session: req.session
+    });
 });
 
 module.exports = router;

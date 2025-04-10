@@ -54,8 +54,22 @@ app.use((req, res) => {
     res.status(404).send("Trang không tồn tại!");
 });
 
-// Khởi động server
+// ✅ Tự động thử cổng khác nếu 3000 bị chiếm
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`✅ Server chạy tại: http://localhost:${PORT}`);
-});
+
+function startServer(port) {
+    const server = app.listen(port, () => {
+        console.log(`✅ Server chạy tại: http://localhost:${port}`);
+    });
+
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.warn(`⚠️ Cổng ${port} đang bị chiếm. Đang thử cổng ${port + 1}...`);
+            startServer(port + 1);
+        } else {
+            console.error('❌ Lỗi khi khởi động server:', err);
+        }
+    });
+}
+
+startServer(PORT);
