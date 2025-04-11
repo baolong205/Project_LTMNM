@@ -162,9 +162,9 @@
     }
   ],
   "users": [
-    { "username": "admin", "password": "123456", "role": "admin" },
-    { "username": "staff", "password": "123456", "role": "staff", "staffRole": "Thu ngân" },
-    { "username": "waiter", "password": "123456", "role": "staff", "staffRole": "Phục vụ" },
-    { "username": "bartender", "password": "123456", "role": "staff", "staffRole": "Pha chế" }
+    { "username": "Cao Cường", "password": "123456", "role": "admin" },
+    { "username": "Bảo Long", "password": "123456", "role": "staff", "staffRole": "Thu ngân" },
+    { "username": "Văn Sang", "password": "123456", "role": "staff", "staffRole": "Phục vụ" },
+    { "username": "Hoài Giang", "password": "123456", "role": "staff", "staffRole": "Pha chế" }
   ]
 }

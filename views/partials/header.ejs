@@ -79,47 +79,77 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-brown">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">☕ Quản lý Cafe</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">🏠 Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/menu">🍽️ Menu</a>
-                    </li>                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="/order/">📜 Đặt món</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/payment">💳 Thanh toán</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/history">📖 Lịch sử đơn hàng</a>
-                    </li>
-                    <% if (session && session.user) { %>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" href="/auth/logout">🚪 <%= session.user.username %> (Đăng xuất)</a>
-                        </li>
-                        <% if (session.user.role === 'staff') { %>
-                            <li class="nav-item">
-                                <span class="nav-link text-warning">👨‍🍳 Quyền: <%= session.user.staffRole %></span>
-                            </li>
-                        <% } %>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/login">🔑 Đăng nhập</a>
-                        </li>
-                    <% } %>                    
-                </ul>
-            </div>
+          <a class="navbar-brand" href="/">☕ Quản lý Cafe</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+      
+              <% if (session && session.user && session.user.role === 'staff') { %>
+                <% if (session.user.staffRole === 'thu_ngan') { %>
+                  <!-- Chỉ hiện với thu ngân -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="/payment">💳 Thanh toán</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/history">📖 Lịch sử đơn hàng</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/finance">💰 Thu chi</a>
+                  </li>
+                <% } else if (session.user.staffRole === 'pha_che') { %>
+                  <!-- Với pha chế -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="/order/processing">🍹 Đơn cần pha chế</a>
+                  </li>
+                <% } else if (session.user.staffRole === 'phuc_vu') { %>
+                  <!-- Với phục vụ -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="/order/delivery">🍽️ Giao món</a>
+                  </li>
+                <% } %>
+              <% } else { %>
+                <!-- Với người dùng bình thường hoặc admin -->
+                <li class="nav-item">
+                  <a class="nav-link" href="/">🏠 Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/menu">🍽️ Menu</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/order">📜 Đặt món</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/payment">💳 Thanh toán</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/history">📖 Lịch sử đơn hàng</a>
+                </li>
+              <% } %>
+      
+              <% if (session && session.user) { %>
+                <li class="nav-item">
+                  <a class="nav-link text-danger" href="/auth/logout">🚪 <%= session.user.username %> (Đăng xuất)</a>
+                </li>
+                <% if (session.user.role === 'staff') { %>
+                  <li class="nav-item">
+                    <span class="nav-link text-warning">👨‍🍳 Quyền: <%= session.user.staffRole %></span>
+                  </li>
+                <% } %>
+              <% } else { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/auth/login">🔑 Đăng nhập</a>
+                </li>
+              <% } %>
+      
+            </ul>
+          </div>
         </div>
-    </nav>
+      </nav>      
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ const orderRouter = require('./routes/order');
 const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
-
+const dashboardRouter = require('./routes/dashboard');
 // ✅ Import middleware
 const {
     isAuthenticated,
@@ -29,7 +29,7 @@ connectDB();
 
 // Cấu hình session
 app.use(session({
-    secret: 'your-secret-key',
+    secret: 'LTMNM',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
@@ -59,6 +59,9 @@ app.use('/auth', authRoutes);
 app.use('/order', orderRouter);
 app.use('/payment', paymentRoutes);
 app.use('/admin', adminRoutes);
+app.use('/dashboard', dashboardRouter);
+const flash = require('connect-flash');
+app.use(flash());
 
 // Xử lý lỗi 404
 app.use((req, res) => {
