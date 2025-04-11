@@ -4,27 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
         <h2 class="text-center">Đăng nhập</h2>
-
         <% if (error) { %>
-            <div class="alert alert-danger"><%= error %></div>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
         <% } %>
-
         <form action="/auth/login" method="POST">
             <div class="mb-3">
-                <label for="username" class="form-label">Tên đăng nhập:</label>
-                <input type="text" id="username" name="username" class="form-control" required>
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" class="form-control" id="username" name="username" required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Mật khẩu:</label>
-                <input type="password" id="password" name="password" class="form-control" required>
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+            
+            <!-- Nếu là staff, hiển thị lựa chọn quyền -->
+            <div class="mb-3" id="roleSelect" style="display:none;">
+                <label for="role" class="form-label">Chọn quyền</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="thu_ngan">Thu ngân</option>
+                    <option value="pha_che">Pha chế</option>
+                    <option value="phuc_vu">Phục vụ</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Đăng nhập</button>
         </form>
     </div>
+
+    <script>
+        const usernameInput = document.getElementById('username');
+        const roleSelect = document.getElementById('roleSelect');
+
+        // Lắng nghe sự kiện khi người dùng nhập tên
+        usernameInput.addEventListener('input', () => {
+            if (usernameInput.value.toLowerCase() === 'staff') {
+                roleSelect.style.display = 'block'; // Hiển thị lựa chọn quyền
+            } else {
+                roleSelect.style.display = 'none'; // Ẩn lựa chọn quyền nếu không phải staff
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

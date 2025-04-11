@@ -163,6 +163,8 @@
   ],
   "users": [
     { "username": "admin", "password": "123456", "role": "admin" },
-    { "username": "staff", "password": "123456", "role": "staff" }
+    { "username": "staff", "password": "123456", "role": "staff", "staffRole": "Thu ngân" },
+    { "username": "waiter", "password": "123456", "role": "staff", "staffRole": "Phục vụ" },
+    { "username": "bartender", "password": "123456", "role": "staff", "staffRole": "Pha chế" }
   ]
 }

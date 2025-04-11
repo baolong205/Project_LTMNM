@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
-const connectDB = require('./config/db'); // Kết nối MongoDB
+const connectDB = require('./config/db');
 
 // Import routes
 const menuRoutes = require('./routes/menu');
@@ -11,6 +11,17 @@ const orderRouter = require('./routes/order');
 const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
+
+// ✅ Import middleware
+const {
+    isAuthenticated,
+    isAdmin,
+    isStaff,
+    isCashier,
+    isBartender,
+    isWaiter
+} = require('./middlewares/auth');
+
 const app = express();
 
 // Kết nối MongoDB
@@ -21,7 +32,7 @@ app.use(session({
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }  // secure: false cho môi trường không HTTPS
+    cookie: { secure: false }
 }));
 
 // Middleware xử lý dữ liệu từ form & JSON
@@ -38,11 +49,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// Cấu hình thư mục public (CSS, JS, ảnh)
+// Cấu hình thư mục public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/', homeRoutes);  // ✅ Trang chính
+app.use('/', homeRoutes);
 app.use('/menu', menuRoutes);
 app.use('/auth', authRoutes);
 app.use('/order', orderRouter);
@@ -54,9 +65,8 @@ app.use((req, res) => {
     res.status(404).send("Trang không tồn tại!");
 });
 
-// ✅ Tự động thử cổng khác nếu 3000 bị chiếm
+// Tự động thử cổng khác nếu bị chiếm
 const PORT = process.env.PORT || 3000;
-
 function startServer(port) {
     const server = app.listen(port, () => {
         console.log(`✅ Server chạy tại: http://localhost:${port}`);
@@ -71,5 +81,4 @@ function startServer(port) {
         }
     });
 }
-
 startServer(PORT);

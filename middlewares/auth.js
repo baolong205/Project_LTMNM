@@ -1,55 +1,52 @@
-const express = require('express');
-const router = express.Router();
+// ./middlewares/auth.js
+const isAuthenticated = (req, res, next) => {
+    if (req.session && req.session.user) {
+        return next();
+    }
+    res.redirect('/auth/login');
+};
 
-// Middleware kiểm tra quyền Admin
 const isAdmin = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'admin') {
-        next();
-    } else {
-        res.status(403).send('Bạn không có quyền truy cập!');
+    if (req.session && req.session.user && req.session.user.role === 'admin') {
+        return next();
     }
+    res.redirect('/'); // Nếu không phải admin, chuyển về trang chủ
 };
 
-// Middleware kiểm tra quyền Nhân viên
+// Các middleware khác (nếu chưa định nghĩa, bạn có thể thêm logic tương tự)
 const isStaff = (req, res, next) => {
-    if (req.session.user && (req.session.user.role === 'admin' || req.session.user.role === 'staff')) {
-        next();
-    } else {
-        res.status(403).send('Bạn không có quyền truy cập!');
+    if (req.session && req.session.user && req.session.user.role === 'staff') {
+        return next();
     }
+    res.redirect('/');
 };
 
-// Giả lập một danh sách người dùng (thực tế bạn sẽ kiểm tra trong cơ sở dữ liệu)
-const users = [
-    { username: 'admin', password: 'admin123', role: 'admin' },
-    { username: 'staff', password: 'staff123', role: 'staff' }
-];
-
-// Xử lý đăng nhập
-router.post('/login', (req, res) => {
-    const { username, password } = req.body;
-
-    // Tìm người dùng trong danh sách giả lập
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        // Lưu thông tin người dùng vào session
-        req.session.user = user;
-
-        // Đăng nhập thành công, chuyển hướng về trang chủ hoặc trang nào đó
-        res.redirect('/');
-    } else {
-        // Nếu thông tin đăng nhập sai
-        res.render('auth/login', { error: 'Sai tên đăng nhập hoặc mật khẩu!' });
+const isCashier = (req, res, next) => {
+    if (req.session && req.session.user && req.session.user.role === 'cashier') {
+        return next();
     }
-});
+    res.redirect('/');
+};
 
-// Xử lý đăng xuất
-router.get('/logout', (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/auth/login');
-    });
-});
+const isBartender = (req, res, next) => {
+    if (req.session && req.session.user && req.session.user.role === 'bartender') {
+        return next();
+    }
+    res.redirect('/');
+};
 
-// Xuất cả router và middleware
-module.exports = { router, isAdmin, isStaff };
+const isWaiter = (req, res, next) => {
+    if (req.session && req.session.user && req.session.user.role === 'waiter') {
+        return next();
+    }
+    res.redirect('/');
+};
+
+module.exports = {
+    isAuthenticated,
+    isAdmin,
+    isStaff,
+    isCashier,
+    isBartender,
+    isWaiter
+};
