@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <div class="container mt-4">
-    <h2 class="text-center mb-4">🍽️ Menu</h2>       
+    <h2 class="text-center mb-4">🍽️ Menu</h2>
 
     <!-- Bảng danh sách món ăn -->
     <% if (menuItems && menuItems.length > 0) { %>
@@ -25,7 +25,7 @@
                             <td><%= item.name %></td>
                             <td><%= item.group %></td>
                             <td><%= item.unit %></td>
-                            <td class="fw-bold"><%= item.price.toLocaleString('vi-VN') %> VND</td>
+                            <td class="fw-bold"><%= item.price ? item.price.toLocaleString('vi-VN') : 'N/A' %> VND</td>
                         </tr>
                     <% }) %>
                 </tbody>

@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <h3 class="text-center">💳 Thanh toán</h3>
 
-    <% if (cart && cart.length > 0) { %>
+    <% if (cart && Array.isArray(cart) && cart.length > 0) { %>
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <% cart.forEach(item => { %>
+                <% cart.forEach((item) => { %>
                     <tr>
                         <td><%= item.name %></td>
                         <td><%= item.quantity %></td>
@@ -24,19 +24,22 @@
                 <% }) %>
             </tbody>
         </table>
-        <h4 class="text-end">Tổng tiền: <%= total.toLocaleString('vi-VN') %> VND</h4>
 
-        <form action="/payment/confirm/<%= tableNumber %>" method="POST">
+        <h4 class="text-end">
+            Tổng tiền: 
+            <%= total > 0 ? total.toLocaleString('vi-VN') : 'N/A' %> VND
+        </h4>
+
+        <form action="/order/payment/confirm/<%= tableNumber %>" method="POST">
             <button type="submit" class="btn btn-primary w-100">Xác nhận thanh toán</button>
         </form>
     <% } else { %>
-        <div class="alert alert-warning text-center">❌ Giỏ hàng trống.</div>
+        <div class="alert alert-warning text-center">❌ Giỏ hàng trống hoặc không hợp lệ.</div>
     <% } %>
 </div>
 
-<!-- Kiểm tra xem có thông báo thanh toán thành công hay không -->
-  <% if (successMessage) { %>
-    <!-- Modal thông báo thanh toán thành công -->
+<!-- Success Modal -->
+<% if (successMessage) { %>
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content text-center">
@@ -57,14 +60,13 @@
 <%- include('../partials/footer') %>
 
 <script>
-  <% if (typeof(successMessage) !== 'undefined' && successMessage) { %>
-    // Khi trang được tải xong, hiển thị modal thành công
+    <% if (successMessage) { %>
         document.addEventListener('DOMContentLoaded', function () {
             var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-        backdrop: 'static',
-            keyboard: false
-      });
-      successModal.show();
-    });
-  <% } %>
+                backdrop: 'static',
+                keyboard: false
+            });
+            successModal.show();
+        });
+    <% } %>
 </script>
