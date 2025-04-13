@@ -15,6 +15,10 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res) => {
   const { username, password, role } = req.body;
 
+  if (!username || !password || !role) {
+    return res.render('auth/login', { error: 'Vui lòng nhập đủ tên đăng nhập, mật khẩu và vai trò.' });
+  }
+
   fs.readFile(dbPath, 'utf-8', (err, data) => {
     if (err) {
       return res.status(500).render('auth/login', { error: 'Lỗi đọc dữ liệu người dùng.' });

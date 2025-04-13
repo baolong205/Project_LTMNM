@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const connectDB = require('./config/db');
 
-// Import routes
+// Import các route
 const menuRoutes = require('./routes/menu');
 const authRoutes = require('./routes/auth');
 const orderRoutes = require('./routes/order');
@@ -14,33 +14,21 @@ const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
 const dashboardRoutes = require('./routes/dashboard');
 
-// ✅ Middleware phân quyền
-const {
-    isAuthenticated,
-    isAdmin,
-    isStaff,
-    isCashier,
-    isBartender,
-    isWaiter
-} = require('./middlewares/auth');
-
 const app = express();
 
-// ✅ Kết nối MongoDB
+// Kết nối MongoDB
 connectDB();
 
-// ✅ Cấu hình session trước flash
+// Cấu hình session và flash
 app.use(session({
     secret: 'LTMNM',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
 }));
-
-// ✅ Cấu hình connect-flash sau session
 app.use(flash());
 
-// ✅ Truyền flash message và session vào res.locals
+// Truyền flash message và session vào res.locals
 app.use((req, res, next) => {
     res.locals.session = req.session;
     res.locals.successMessage = req.flash('success');
@@ -48,18 +36,18 @@ app.use((req, res, next) => {
     next();
 });
 
-// ✅ Middleware xử lý form và JSON
+// Xử lý form và JSON
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ✅ Cấu hình view engine là EJS
+// Cấu hình view engine là EJS
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// ✅ Cấu hình thư mục tĩnh (public)
+// Cấu hình thư mục tĩnh (public)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ Các tuyến đường chính
+// Sử dụng các route
 app.use('/', homeRoutes);
 app.use('/menu', menuRoutes);
 app.use('/auth', authRoutes);
@@ -68,12 +56,12 @@ app.use('/payment', paymentRoutes);
 app.use('/admin', adminRoutes);
 app.use('/dashboard', dashboardRoutes);
 
-// ✅ Trang 404
+// Trang 404
 app.use((req, res) => {
     res.status(404).send("❌ Trang không tồn tại!");
 });
 
-// ✅ Khởi chạy server (tự động tăng cổng nếu bị trùng)
+// Khởi chạy server
 const PORT = process.env.PORT || 3000;
 function startServer(port) {
     const server = app.listen(port, () => {
