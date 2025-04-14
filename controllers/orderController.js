@@ -59,6 +59,7 @@ exports.checkout = (req, res) => {
   // Xử lý logic thanh toán ở đây (ví dụ: lưu vào cơ sở dữ liệu)
   req.session.cart = []; // Xóa giỏ hàng sau khi thanh toán
   res.send('Đơn hàng của bạn đã được gửi thành công!');
+<<<<<<< HEAD
 };
 const getPendingItems = async (req, res) => {
     try {
@@ -105,4 +106,6 @@ const markItemDone = async (req, res) => {
   module.exports = {
     getPendingItems,
     markItemDone
+=======
+>>>>>>> cfed48751bbbc017bca2d2d5560b6587b36794c3
 };

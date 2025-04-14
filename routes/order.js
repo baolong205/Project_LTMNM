@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const Order = require('../models/order'); // Model Order
+const Order = require('../models/order');
 
 const dbFilePath = path.join(__dirname, '../db.json');
 
@@ -27,6 +27,7 @@ router.get('/menu/:tableNumber', async (req, res) => {
 // Hiển thị trang order
 router.get('/', async (req, res) => {
     try {
+        const orders = await Order.find({ userId: req.session.userId});
         const data = await fs.readFile(dbFilePath, 'utf8');
         const db = JSON.parse(data);
         const menuItems = db.menuItems || [];
@@ -38,7 +39,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Thêm món vào giỏ hàng (MongoDB)
+// Thêm món vào giỏ hàng
 router.post('/add', async (req, res) => {
     const { itemId, quantity, tableNumber } = req.body;
 
@@ -47,16 +48,17 @@ router.post('/add', async (req, res) => {
         const db = JSON.parse(data);
         const menuItems = db.menuItems || [];
 
+        // Tìm món ăn trong menu
         const item = menuItems.find(i => String(i._id) === String(itemId));
         if (!item) {
             return res.status(404).json({ success: false, error: 'Món không tồn tại.' });
         }
 
-        // Tìm đơn hàng của bàn với trạng thái "Pending"
+        // Tìm đơn hàng theo số bàn và trạng thái "Pending"
         let order = await Order.findOne({ tableNumber, status: "Pending" });
 
-        // Nếu chưa có đơn hàng, tạo mới
         if (!order) {
+            // Nếu không tìm thấy đơn hàng, tạo mới
             order = new Order({
                 tableNumber,
                 items: [],
@@ -65,11 +67,13 @@ router.post('/add', async (req, res) => {
             });
         }
 
-        // Kiểm tra xem món đã tồn tại chưa
-        const existingItem = order.items.find(i => i._id === itemId);
+        // Kiểm tra món ăn đã có trong giỏ hàng chưa
+        const existingItem = order.items.find(i => String(i._id) === String(itemId));
         if (existingItem) {
+            // Nếu đã có món ăn, tăng số lượng
             existingItem.quantity += parseInt(quantity, 10);
         } else {
+            // Nếu chưa có, thêm mới món ăn vào giỏ hàng
             order.items.push({
                 _id: item._id,
                 name: item.name,
@@ -78,93 +82,16 @@ router.post('/add', async (req, res) => {
             });
         }
 
-        // Cập nhật tổng tiền
+        // Cập nhật tổng tiền của giỏ hàng
         order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+        // Lưu lại đơn hàng
         await order.save();
 
-        res.json({ success: true, message: `Đã thêm vào giỏ hàng bàn ${tableNumber}!` });
+        res.json({ success: true, message: `Đã thêm món vào giỏ hàng bàn ${tableNumber}!` });
     } catch (err) {
-        console.error("❌ Lỗi khi thêm vào giỏ hàng:", err);
+        console.error("❌ Lỗi khi thêm món vào giỏ hàng:", err);
         res.status(500).json({ success: false, error: "Lỗi máy chủ!" });
-    }
-});
-
-// Trang thanh toán
-router.get('/order/payment/:tableNumber', async (req, res) => {
-    const { tableNumber } = req.params;
-    let cart = [];
-    let total = 0;
-
-    try {
-        // Lấy đơn hàng từ MongoDB
-        const order = await Order.findOne({ tableNumber, status: "Pending" });
-
-        if (order && order.items.length > 0) {
-            cart = order.items;
-            total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        }
-    } catch (error) {
-        console.error('❌ Lỗi khi lấy đơn hàng:', error);
-    }
-
-    res.render('order/payment', {
-        cart,
-        total,
-        tableNumber,
-        successMessage: req.session.successMessage || null
-    });
-});
-
-
-// Xác nhận thanh toán
-router.post('/payment/confirm/:tableNumber', async (req, res) => {
-    const { tableNumber } = req.params;
-
-    try {
-        // Tìm đơn hàng của bàn theo tableNumber với trạng thái "Pending"
-        const order = await Order.findOne({ tableNumber, status: "Pending" });
-
-        if (!order || order.items.length === 0) {
-            return res.redirect('/order');
-        }
-
-        // Tính tổng tiền
-        let total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-        // Cập nhật trạng thái đơn hàng thành "Paid"
-        order.status = "Paid";
-        await order.save();
-
-        // Xóa giỏ hàng sau khi thanh toán
-        req.session.carts[tableNumber] = [];
-
-        // Render lại trang thanh toán với thông báo thành công
-        res.render('order/payment', {
-            cart: order.items,
-            total: total,
-            tableNumber: tableNumber,
-            successMessage: "Thanh toán thành công! Cảm ơn bạn đã sử dụng dịch vụ."
-        });
-    } catch (err) {
-        console.error("❌ Lỗi khi thanh toán:", err);
-        res.status(500).send("Lỗi máy chủ!");
-    }
-});
-// Hiển thị danh sách các bàn cần thanh toán
-router.get('/pending-orders', async (req, res) => {
-    try {
-        // Tìm các đơn hàng với trạng thái "Pending"
-        const orders = await Order.find({ status: "Pending" });
-
-        // Lấy danh sách các số bàn từ các đơn hàng đang chờ thanh toán
-        const tableNumbers = orders.map(order => order.tableNumber);
-
-        // Render trang với danh sách bàn cần thanh toán
-        res.render('order/payment_list', { tableNumbers });
-    } catch (err) {
-        console.error("❌ Lỗi khi lấy danh sách đơn hàng chờ thanh toán:", err);
-        res.status(500).send("Lỗi máy chủ!");
     }
 });
 

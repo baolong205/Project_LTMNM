@@ -18,18 +18,9 @@ const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
 const dashboardRoutes = require('./routes/dashboard');
-const bartenderRoutes = require('./routes/bartender'); // 
-// ✅ Middleware phân quyền (nếu cần)
-const {
-    isAuthenticated,
-    isAdmin,
-    isStaff,
-    isCashier,
-    isBartender,
-    isWaiter
-} = require('./middlewares/auth');
+const bartenderRoutes = require('./routes/bartender');
 
-// ✅ Cấu hình session
+// Cấu hình session và flash
 app.use(session({
     secret: 'LTMNM',
     resave: false,
@@ -59,7 +50,7 @@ app.set('view engine', 'ejs');
 // ✅ Public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ Các tuyến đường chính
+// Sử dụng các route
 app.use('/', homeRoutes);
 app.use('/menu', menuRoutes);
 app.use('/auth', authRoutes);
@@ -69,7 +60,7 @@ app.use('/admin', adminRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/bartender', bartenderRoutes);
 
-// ✅ Trang 404
+// Trang 404
 app.use((req, res) => {
     res.status(404).send("❌ Trang không tồn tại!");
 });

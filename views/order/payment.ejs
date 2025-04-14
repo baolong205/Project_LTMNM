@@ -30,7 +30,7 @@
             <%= total > 0 ? total.toLocaleString('vi-VN') : 'N/A' %> VND
         </h4>
 
-        <form action="/order/payment/confirm/<%= tableNumber %>" method="POST">
+        <form action="/payment/confirm/<%= tableNumber %>" method="POST">
             <button type="submit" class="btn btn-primary w-100">Xác nhận thanh toán</button>
         </form>
     <% } else { %>
@@ -38,35 +38,4 @@
     <% } %>
 </div>
 
-<!-- Success Modal -->
-<% if (successMessage) { %>
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content text-center">
-                <div class="modal-header bg-success text-white justify-content-center">
-                    <h5 class="modal-title w-100" id="successModalLabel">✔️ Thành công</h5>
-                </div>
-                <div class="modal-body fs-5">
-                    <%= successMessage %>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-<% } %>
-
 <%- include('../partials/footer') %>
-
-<script>
-    <% if (successMessage) { %>
-        document.addEventListener('DOMContentLoaded', function () {
-            var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            successModal.show();
-        });
-    <% } %>
-</script>
