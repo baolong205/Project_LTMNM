@@ -27,6 +27,7 @@ router.get('/menu/:tableNumber', async (req, res) => {
 // Hiển thị trang order
 router.get('/', async (req, res) => {
     try {
+        const orders = await Order.find({ userId: req.session.userId});
         const data = await fs.readFile(dbFilePath, 'utf8');
         const db = JSON.parse(data);
         const menuItems = db.menuItems || [];
@@ -82,7 +83,7 @@ router.post('/add', async (req, res) => {
         }
 
         // Cập nhật tổng tiền của giỏ hàng
-        order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
         // Lưu lại đơn hàng
         await order.save();
