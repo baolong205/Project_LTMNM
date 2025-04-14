@@ -15,6 +15,10 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res) => {
   const { username, password, role } = req.body;
 
+  if (!username || !password || !role) {
+    return res.render('auth/login', { error: 'Vui lòng nhập đủ tên đăng nhập, mật khẩu và vai trò.' });
+  }
+
   fs.readFile(dbPath, 'utf-8', (err, data) => {
     if (err) {
       return res.status(500).render('auth/login', { error: 'Lỗi đọc dữ liệu người dùng.' });
@@ -45,7 +49,7 @@ router.post('/login', (req, res) => {
 
       // Redirect theo vai trò
       if (role === 'Thu ngân') return res.redirect('/payment');
-      if (role === 'Pha chế') return res.redirect('/kitchen');
+      if (role === 'Pha chế') return res.redirect('/bartender');
       if (role === 'Phục vụ') return res.redirect('/order');
 
       return res.redirect('/menu'); // fallback
