@@ -5,7 +5,12 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const connectDB = require('./config/db');
 
-// Import các route
+const app = express();
+
+// ✅ Kết nối MongoDB
+connectDB();
+
+// ✅ Import routes
 const menuRoutes = require('./routes/menu');
 const authRoutes = require('./routes/auth');
 const orderRoutes = require('./routes/order');
@@ -13,22 +18,20 @@ const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
 const dashboardRoutes = require('./routes/dashboard');
-
-const app = express();
-
-// Kết nối MongoDB
-connectDB();
+const bartenderRoutes = require('./routes/bartender');
 
 // Cấu hình session và flash
 app.use(session({
     secret: 'LTMNM',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { secure: false } // Dùng true nếu HTTPS
 }));
+
+// ✅ Cấu hình flash
 app.use(flash());
 
-// Truyền flash message và session vào res.locals
+// ✅ Biến toàn cục (dùng trong view)
 app.use((req, res, next) => {
     res.locals.session = req.session;
     res.locals.successMessage = req.flash('success');
@@ -36,15 +39,15 @@ app.use((req, res, next) => {
     next();
 });
 
-// Xử lý form và JSON
+// ✅ Middleware xử lý form
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Cấu hình view engine là EJS
+// ✅ View engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Cấu hình thư mục tĩnh (public)
+// ✅ Public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Sử dụng các route
@@ -55,13 +58,14 @@ app.use('/order', orderRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/admin', adminRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/bartender', bartenderRoutes);
 
 // Trang 404
 app.use((req, res) => {
     res.status(404).send("❌ Trang không tồn tại!");
 });
 
-// Khởi chạy server
+// ✅ Khởi chạy server (tự tăng cổng nếu bị trùng)
 const PORT = process.env.PORT || 3000;
 function startServer(port) {
     const server = app.listen(port, () => {
@@ -77,4 +81,5 @@ function startServer(port) {
         }
     });
 }
+
 startServer(PORT);

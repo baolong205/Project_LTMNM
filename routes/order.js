@@ -79,7 +79,6 @@ router.post('/add', async (req, res) => {
                 quantity: parseInt(quantity, 10),
             });
         }
-
         // Cập nhật tổng tiền
         order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -93,7 +92,6 @@ router.post('/add', async (req, res) => {
     }
 });
 
-// filepath: d:\project_node\Project_LTMNM\routes\order.js
 router.get('/', async (req, res) => {
     try {
         const orders = await Order.find({}); // Lấy danh sách đơn hàng từ cơ sở dữ liệu
@@ -105,5 +103,3 @@ router.get('/', async (req, res) => {
 });
 
 module.exports = router;
-
-
