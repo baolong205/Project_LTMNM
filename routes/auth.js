@@ -49,7 +49,7 @@ router.post('/login', (req, res) => {
 
       // Redirect theo vai trò
       if (role === 'Thu ngân') return res.redirect('/payment');
-      if (role === 'Pha chế') return res.redirect('/kitchen');
+      if (role === 'Pha chế') return res.redirect('/bartender');
       if (role === 'Phục vụ') return res.redirect('/order');
 
       return res.redirect('/menu'); // fallback
