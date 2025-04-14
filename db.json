@@ -1,204 +1,116 @@
-
-  {
-    "menuItems": [
-       {
-         "id": 1,
-         "code": "CF01",
-         "name": "Cà phê sữa",
-         "group": "Cà phê",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 25000,
-         "image": "https://cubes-asia.com/storage/blogs/2024-12/5-cach-pha-ca-phe-sua-tuoi-khong-duong-co.jpeg",
-         "type": "cà phê"
-       },
-       {
-         "id": 2,
-         "code": "CF02",
-         "name": "Cà phê đen",
-         "group": "Cà phê",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 20000,
-         "image": "https://gacoffeeandmore.com/wp-content/uploads/2022/12/Ca-Phe-Den-scaled.jpg",
-         "type": "cà phê"
-       },
-       {
-         "id": 3,
-         "code": "CF03",
-         "name": "Cà phê Americano",
-         "group": "Cà phê",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 30000,
-         "image": "https://caphekhoanbetong.com/wp-content/uploads/2021/09/cafe-americano-da-nong-ngot-thanh-chuan-my-1.jpg",
-         "type": "cà phê"
-       },
-       {
-         "id": 4,
-         "code": "CF04",
-         "name": "Cà phê Espresso",
-         "group": "Cà phê",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 35000,
-         "image": "https://thegioimaypha.com/wp-content/uploads/2021/07/ca-phe-espresso.jpg",
-         "type": "cà phê"
-       },
-       {
-         "id": 5,
-         "code": "TR01",
-         "name": "Trà đào",
-         "group": "Trà",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 30000,
-         "image": "https://toongcenter.vn/storage/photos/shares/meo%20pha%20che/tra%20dao%20cam%20s%E1%BA%A3/1.jpg",
-         "type": "trà"
-       },
-       {
-         "id": 6,
-         "code": "TR02",
-         "name": "Trà chanh mật ong",
-         "group": "Trà",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 28000,
-         "image": "https://file.hstatic.net/1000135323/file/c1_a8c0faa291c84594bf0939034d1b5bdd_grande.jpg",
-         "type": "trà"
-       },
-       {
-         "id": 7,
-         "code": "TS01",
-         "name": "Trà sữa trân châu",
-         "group": "Trà sữa",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 35000,
-         "image": "https://xingfuvietnam.vn/wp-content/uploads/2023/02/xingfu-tra-sua-tran-chau-duong-den-2-FILEminimizer.jpg",
-         "type": "trà"
-       },
-       {
-         "id": 8,
-         "code": "TS02",
-         "name": "Trà sữa matcha",
-         "group": "Trà sữa",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 38000,
-         "image": "https://bizweb.dktcdn.net/100/421/036/files/cach-lam-tra-sua-matcha-kem-cheese-jpeg.jpg?v=1639127701404",
-         "type": "trà"
-       },
-       {
-         "id": 9,
-         "code": "ST01",
-         "name": "Sinh tố bơ",
-         "group": "Sinh tố",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 40000,
-         "image": "https://fruitfarmer.vn/upload/product/sinh-to-bo-2-5058.jpg",
-         "type": "nước"
-       },
-       {
-         "id": 10,
-         "code": "TA01",
-         "name": "Bánh mì sandwich",
-         "group": "Thức ăn nhanh",
-   "category": "Thức ăn",
-         "unit": "Phần",
-         "price": 20000,
-         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgjPUq-4Zqau9DePFc0hbBBPfk837j5mHRQQ&s",
-         "type": "bánh"
-       }, {
-         "id": 3,
-         "code": "CF03",
-         "name": "Cà phê Americano",
-         "group": "Cà phê",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 30000,
-         "image": "https://caphekhoanbetong.com/wp-content/uploads/2021/09/cafe-americano-da-nong-ngot-thanh-chuan-my-1.jpg",
-         "type": "cà phê"
-       },
-       {
-         "id": 4,
-         "code": "CF04",
-         "name": "Cà phê Espresso",
-         "group": "Cà phê",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 35000,
-         "image": "https://thegioimaypha.com/wp-content/uploads/2021/07/ca-phe-espresso.jpg",
-         "type": "cà phê"
-       },
-       {
-         "id": 5,
-         "code": "TR01",
-         "name": "Trà đào",
-         "group": "Trà",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 30000,
-         "image": "https://toongcenter.vn/storage/photos/shares/meo%20pha%20che/tra%20dao%20cam%20s%E1%BA%A3/1.jpg",
-         "type": "trà"
-       },
-       {
-         "id": 6,
-         "code": "TR02",
-         "name": "Trà chanh mật ong",
-         "group": "Trà",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 28000,
-         "image": "https://file.hstatic.net/1000135323/file/c1_a8c0faa291c84594bf0939034d1b5bdd_grande.jpg",
-         "type": "trà"
-       },
-       {
-         "id": 7,
-         "code": "TS01",
-         "name": "Trà sữa trân châu",
-         "group": "Trà sữa",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 35000,
-         "image": "https://xingfuvietnam.vn/wp-content/uploads/2023/02/xingfu-tra-sua-tran-chau-duong-den-2-FILEminimizer.jpg",
-         "type": "trà"
-       },
-       {
-         "id": 8,
-         "code": "TS02",
-         "name": "Trà sữa matcha",
-         "group": "Trà sữa",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 38000,
-         "image": "https://bizweb.dktcdn.net/100/421/036/files/cach-lam-tra-sua-matcha-kem-cheese-jpeg.jpg?v=1639127701404",
-         "type": "trà"
-       },
-       {
-         "id": 9,
-         "code": "ST01",
-         "name": "Sinh tố bơ",
-         "group": "Sinh tố",
-         "category": "Đồ uống",
-         "unit": "Ly",
-         "price": 40000,
-         "image": "https://fruitfarmer.vn/upload/product/sinh-to-bo-2-5058.jpg",
-         "type": "nước"
-       },
-       {
-         "id": 10,
-         "code": "TA01",
-         "name": "Bánh mì sandwich",
-         "group": "Thức ăn nhanh",
-         "category": "Thức ăn",
-         "unit": "Phần",
-         "price": 20000,
-         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgjPUq-4Zqau9DePFc0hbBBPfk837j5mHRQQ&s",
-         "type": "bánh"
-       }
-     ],
+{
+  "menuItems": [
+    {
+      "id": 1,
+      "code": "CF01",
+      "name": "Cà phê sữa",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 25000,
+      "image": "https://cubes-asia.com/storage/blogs/2024-12/5-cach-pha-ca-phe-sua-tuoi-khong-duong-co.jpeg",
+      "type": "cà phê"
+    },
+    {
+      "id": 2,
+      "code": "CF02",
+      "name": "Cà phê đen",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 20000,
+      "image": "https://gacoffeeandmore.com/wp-content/uploads/2022/12/Ca-Phe-Den-scaled.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 3,
+      "code": "CF03",
+      "name": "Cà phê Americano",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000,
+      "image": "https://caphekhoanbetong.com/wp-content/uploads/2021/09/cafe-americano-da-nong-ngot-thanh-chuan-my-1.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 4,
+      "code": "CF04",
+      "name": "Cà phê Espresso",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://thegioimaypha.com/wp-content/uploads/2021/07/ca-phe-espresso.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 5,
+      "code": "TR01",
+      "name": "Trà đào",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000,
+      "image": "https://toongcenter.vn/storage/photos/shares/meo%20pha%20che/tra%20dao%20cam%20s%E1%BA%A3/1.jpg",
+      "type": "trà"
+    },
+    {
+      "id": 6,
+      "code": "TR02",
+      "name": "Trà chanh mật ong",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 28000,
+      "image": "https://file.hstatic.net/1000135323/file/c1_a8c0faa291c84594bf0939034d1b5bdd_grande.jpg",
+      "type": "trà"
+    },
+    {
+      "id": 7,
+      "code": "TS01",
+      "name": "Trà sữa trân châu",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://xingfuvietnam.vn/wp-content/uploads/2023/02/xingfu-tra-sua-tran-chau-duong-den-2-FILEminimizer.jpg",
+      "type": "trà"
+    },
+    {
+      "id": 8,
+      "code": "TS02",
+      "name": "Trà sữa matcha",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 38000,
+      "image": "https://bizweb.dktcdn.net/100/421/036/files/cach-lam-tra-sua-matcha-kem-cheese-jpeg.jpg?v=1639127701404",
+      "type": "trà"
+    },
+    {
+      "id": 9,
+      "code": "ST01",
+      "name": "Sinh tố bơ",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 40000,
+      "image": "https://fruitfarmer.vn/upload/product/sinh-to-bo-2-5058.jpg",
+      "type": "nước"
+    },
+    {
+      "id": 10,
+      "code": "TA01",
+      "name": "Bánh mì sandwich",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 20000,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgjPUq-4Zqau9DePFc0hbBBPfk837j5mHRQQ&s",
+      "type": "bánh"
+    }
+  ],
   "users": [
     { "username": "Cao Cường", "password": "123456", "role": "admin" },
     { "username": "Bảo Long", "password": "123456", "role": "staff", "staffRole": "Thu ngân" },

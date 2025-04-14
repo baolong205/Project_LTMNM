@@ -24,22 +24,24 @@ router.get('/menu/:tableNumber', async (req, res) => {
     }
 });
 
-// Hiển thị trang order
-router.get('/', async (req, res) => {
+// Lấy danh sách món ăn theo type
+router.get('/menu/type/:type', async (req, res) => {
     try {
-        const orders = await Order.find({ userId: req.session.userId});
         const data = await fs.readFile(dbFilePath, 'utf8');
         const db = JSON.parse(data);
         const menuItems = db.menuItems || [];
 
-        res.render('order/order', { menuItems, session: req.session });
+        // Lọc danh sách món theo type
+        const filteredItems = menuItems.filter(item => item.type === req.params.type);
+
+        res.json(filteredItems);
     } catch (err) {
-        console.error("❌ Lỗi khi tải trang order:", err);
-        res.status(500).send("Lỗi máy chủ!");
+        console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
+        res.status(500).json({ error: "Lỗi máy chủ!" });
     }
 });
 
-// Thêm món vào giỏ hàng
+// Hiển thị trang order
 router.post('/add', async (req, res) => {
     const { itemId, quantity, tableNumber } = req.body;
 
@@ -54,38 +56,34 @@ router.post('/add', async (req, res) => {
             return res.status(404).json({ success: false, error: 'Món không tồn tại.' });
         }
 
-        // Tìm đơn hàng theo số bàn và trạng thái "Pending"
-        let order = await Order.findOne({ tableNumber, status: "Pending" });
-
+        // Tìm đơn hàng theo số bàn
+        let order = await Order.findOne({ tableNumber });
         if (!order) {
             // Nếu không tìm thấy đơn hàng, tạo mới
             order = new Order({
                 tableNumber,
                 items: [],
                 total: 0,
-                status: "Pending"
             });
         }
 
         // Kiểm tra món ăn đã có trong giỏ hàng chưa
-        const existingItem = order.items.find(i => String(i._id) === String(itemId));
+        const existingItem = order.items.find(i => String(i.menuId) === String(itemId));
         if (existingItem) {
-            // Nếu đã có món ăn, tăng số lượng
             existingItem.quantity += parseInt(quantity, 10);
         } else {
-            // Nếu chưa có, thêm mới món ăn vào giỏ hàng
             order.items.push({
-                _id: item._id,
+                menuId: item._id,
                 name: item.name,
                 price: item.price,
-                quantity: parseInt(quantity, 10)
+                quantity: parseInt(quantity, 10),
             });
         }
 
-        // Cập nhật tổng tiền của giỏ hàng
+        // Cập nhật tổng tiền
         order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-        // Lưu lại đơn hàng
+        // Lưu đơn hàng
         await order.save();
 
         res.json({ success: true, message: `Đã thêm món vào giỏ hàng bàn ${tableNumber}!` });
@@ -95,4 +93,17 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// filepath: d:\project_node\Project_LTMNM\routes\order.js
+router.get('/', async (req, res) => {
+    try {
+        const orders = await Order.find({}); // Lấy danh sách đơn hàng từ cơ sở dữ liệu
+        res.render('order/order', { orders }); // Truyền biến orders vào file order.ejs
+    } catch (err) {
+        console.error("❌ Lỗi khi tải trang order:", err);
+        res.status(500).send("Lỗi máy chủ!");
+    }
+});
+
 module.exports = router;
+
+
