@@ -1,129 +1,218 @@
 <%- include('../partials/header') %>
 
 <style>
-  .container {
+  .menu-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s;
+  }
+
+  .menu-card:hover {
+      transform: scale(1.05);
+  }
+
+  .menu-card img {
+      height: 150px;
+      object-fit: cover;
+  }
+
+  .menu-card .card-body {
       text-align: center;
   }
-  .table th, .table td {
-      text-align: center !important;
-      vertical-align: middle !important;
-  }
-  h3, h4 {
+
+  .cart-table th, .cart-table td {
       text-align: center;
+      vertical-align: middle;
   }
-  #tableContainer {
-      text-align: center;
+
+  .cart-summary {
+      font-weight: bold;
+      font-size: 1.2rem;
   }
 </style>
 
-<div class="container mt-4 d-flex">
-  <div id="menuContainer" class="flex-grow-1">
-    <h3>
-      📜 Menu - <span id="selectedTable">Chọn bàn</span>
-    </h3>
-    <div class="table-responsive">
-      <table class="table table-bordered">
+<div class="container mt-4">
+  <div class="row">
+    <!-- Danh sách món ăn -->
+    <div class="col-md-8">
+      <h3 class="mb-4">📜 Menu - <span id="selectedTable">Chọn bàn</span></h3>
+      <div class="row" id="menuContainer">
+        <div class="col-12 text-danger">
+          Vui lòng chọn bàn để hiển thị menu.
+        </div>
+      </div>
+    </div>
+
+    <!-- Giỏ hàng -->
+    <div class="col-md-4">
+      <h3 class="mb-4">🛒 Danh sách gọi món</h3>
+      <table class="table table-bordered cart-table">
         <thead class="table-dark">
           <tr>
-            <th>Loại món</th>
             <th>Tên món</th>
-            <th>Giá (VND)</th>
             <th>Số lượng</th>
-            <th>Chọn</th>
+            <th>Thành tiền</th>
           </tr>
         </thead>
-        <tbody id="menuTableBody">
+        <tbody id="cartItems">
           <tr>
-            <td colspan="5" class="text-danger">
-              Vui lòng chọn bàn để hiển thị menu.
-            </td>
+            <td colspan="3" class="text-danger">Giỏ hàng trống.</td>
           </tr>
         </tbody>
       </table>
+      <div class="d-flex justify-content-between cart-summary">
+        <span>Tổng tiền:</span>
+        <span id="totalPrice">0 VND</span>
+      </div>
+      <button class="btn w-100 mt-3" id="orderButton" style="background-color: #662c21; color: white;">Order</button>
     </div>
   </div>
 
-  <div id="tableContainer" class="d-grid gap-2 ms-auto" 
-       style="display: grid; grid-template-columns: repeat(2, 1fr); width: 200px">
-    <h4 style="grid-column: span 2">🪑 Chọn bàn</h4>
-    <% for (let i = 1; i <= 20; i++) { %>
-    <button class="btn btn-outline-primary table-btn" data-table="<%= i %>">
-      Bàn <%= i %>
-    </button>
-    <% } %>
+  <!-- Chọn bàn -->
+  <div class="mt-5">
+    <h4>🪑 Chọn bàn</h4>
+    <div class="d-flex flex-wrap gap-2">
+      <% for (let i = 1; i <= 12; i++) { %>
+      <button class="btn btn-outline-primary table-btn" data-table="<%= i %>">
+        Bàn <%= i %>
+      </button>
+      <% } %>
+    </div>
   </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".table-btn").forEach((button) => {
-        button.addEventListener("click", function () {
-            const tableNumber = this.getAttribute("data-table");
-            document.getElementById("selectedTable").innerText = `Bàn ${tableNumber}`;
+    const menuContainer = document.getElementById("menuContainer");
+    const cartItems = document.getElementById("cartItems");
+    const totalPrice = document.getElementById("totalPrice");
+    const orderButton = document.getElementById("orderButton");
+    let cart = [];
 
-            fetch(`/order/menu/${tableNumber}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    renderMenu(data, tableNumber);
-                })
-                .catch((error) => console.error("Lỗi tải menu:", error));
-        });
+    // Xử lý chọn bàn
+    document.querySelectorAll(".table-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const tableNumber = this.getAttribute("data-table");
+        document.getElementById("selectedTable").innerText = `Bàn ${tableNumber}`;
+
+        fetch(`/order/menu/${tableNumber}`)
+          .then((response) => response.json())
+          .then((data) => {
+            renderMenu(data);
+          })
+          .catch((error) => console.error("Lỗi tải menu:", error));
+      });
     });
 
-    function renderMenu(menuItems, tableNumber) {
-        const menuTable = document.getElementById("menuTableBody");
-        menuTable.innerHTML = "";
+    // Hiển thị menu
+    function renderMenu(menuItems) {
+      menuContainer.innerHTML = "";
 
-        if (!Array.isArray(menuItems) || menuItems.length === 0) {
-            menuTable.innerHTML = `<tr><td colspan='5' class='text-danger'>❌ Không có món nào trong menu.</td></tr>`;
-            return;
-        }
+      if (!Array.isArray(menuItems) || menuItems.length === 0) {
+        menuContainer.innerHTML = `<div class="col-12 text-danger">❌ Không có món nào trong menu.</div>`;
+        return;
+      }
 
-        menuItems.forEach((item) => {
-            menuTable.innerHTML += `
-                <tr>
-                    <td>${item.category}</td>
-                    <td>${item.name}</td>
-                    <td class="fw-bold">${item.price.toLocaleString('vi-VN')} VND</td>
-                    <td class="d-flex justify-content-center">
-                        <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item._id}" style="width: 80px;">
-                    </td>
-                    <td>
-                        <button class="btn btn-success add-to-cart" data-id="${item._id}" 
-                                data-name="${item.name}" data-price="${item.price}" data-table="${tableNumber}">
-                            ➕ Thêm
-                        </button>
-                    </td>
-                </tr>`;
+      menuItems.forEach((item) => {
+        menuContainer.innerHTML += `
+          <div class="col-md-4 mb-4">
+            <div class="card menu-card">
+              <img src="${item.image || '/public/image/default.jpg'}" class="card-img-top" alt="${item.name}">
+              <div class="card-body">
+                <h5 class="card-title">${item.name}</h5>
+                <p class="card-text">${item.price.toLocaleString('vi-VN')} VND</p>
+                <div class="d-flex justify-content-center">
+                  <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item._id}" style="width: 80px;">
+                </div>
+                <button class="btn btn-primary btn-sm mt-2 add-to-cart" data-id="${item._id}" data-name="${item.name}" data-price="${item.price}">
+                  ➕ Thêm
+                </button>
+              </div>
+            </div>
+          </div>`;
+      });
+
+      document.querySelectorAll(".add-to-cart").forEach((button) => {
+        button.addEventListener("click", function () {
+          const itemId = this.getAttribute("data-id");
+          const quantityInput = document.querySelector(`.quantity[data-id='${itemId}']`);
+          const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+
+          const item = menuItems.find((item) => item._id === itemId);
+          if (item) {
+            addToCart(item, quantity);
+          }
         });
-
-        document.querySelectorAll(".add-to-cart").forEach((button) => {
-            button.addEventListener("click", function () {
-                const itemId = this.getAttribute("data-id");
-                const tableNumber = this.getAttribute("data-table");
-                const quantityInput = document.querySelector(`.quantity[data-id='${itemId}']`);
-                const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
-
-                fetch("/order/add", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ itemId, quantity, tableNumber })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("✅ Đã thêm vào giỏ hàng cho bàn " + tableNumber + "!");
-                    } else {
-                        alert("❌ Thêm thất bại: " + data.error);
-                    }
-                })
-                .catch(error => console.error("❌ Lỗi khi thêm vào giỏ hàng:", error));
-            });
-        });
+      });
     }
-});
+
+    // Thêm món vào giỏ hàng
+    function addToCart(item, quantity) {
+      const existingItem = cart.find((cartItem) => cartItem._id === item._id);
+      if (existingItem) {
+        existingItem.quantity += quantity; // Cộng dồn số lượng nếu món đã có trong giỏ
+      } else {
+        cart.push({ ...item, quantity }); // Thêm món mới vào giỏ
+      }
+      renderCart(); // Cập nhật giao diện giỏ hàng
+    }
+
+    // Hiển thị giỏ hàng
+    function renderCart() {
+      cartItems.innerHTML = ""; // Xóa nội dung cũ trong giỏ hàng
+      let total = 0; // Biến lưu tổng tiền
+
+      // Duyệt qua từng món trong giỏ hàng
+      cart.forEach((item) => {
+        const itemTotal = item.price * item.quantity; // Tính thành tiền cho từng món 
+        total += itemTotal; // Cộng vào tổng tiền
+
+        // Thêm dòng hiển thị món vào bảng giỏ hàng
+        cartItems.innerHTML += `
+          <tr>
+            <td>${item.name}</td>
+            <td>${item.quantity}</td>
+            <td>${itemTotal.toLocaleString('vi-VN')} VND</td>
+          </tr>`;
+      });
+
+      // Nếu giỏ hàng trống, hiển thị thông báo
+      if (cart.length === 0) {
+        cartItems.innerHTML = `<tr><td colspan="3" class="text-danger">Giỏ hàng trống.</td></tr>`;
+      }
+
+      // Cập nhật tổng tiền hiển thị
+      totalPrice.textContent = `${total.toLocaleString('vi-VN')} VND`;
+    }
+
+    // Xử lý nút "Order"
+    orderButton.addEventListener("click", function () {
+      if (cart.length === 0) {
+        alert("❌ Giỏ hàng trống. Vui lòng thêm món!");
+        return;
+      }
+
+      fetch("/order/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ cart })
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("✅ Đặt món thành công!");
+            cart = [];
+            renderCart();
+          } else {
+            alert("❌ Lỗi khi đặt món: " + data.error);
+          }
+        })
+        .catch((error) => console.error("❌ Lỗi khi gửi đơn hàng:", error));
+    });
+  });
 </script>
 
 <%- include('../partials/footer') %>
