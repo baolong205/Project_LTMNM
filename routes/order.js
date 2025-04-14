@@ -27,6 +27,7 @@ router.get('/menu/:tableNumber', async (req, res) => {
 // Hiển thị trang order
 router.get('/', async (req, res) => {
     try {
+        const orders = await Order.find({ userId: req.session.userId});
         const data = await fs.readFile(dbFilePath, 'utf8');
         const db = JSON.parse(data);
         const menuItems = db.menuItems || [];
