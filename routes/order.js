@@ -8,108 +8,153 @@ const dbFilePath = path.join(__dirname, '../db.json');
 
 // Lấy danh sách món ăn theo số bàn
 router.get('/menu/:tableNumber', async (req, res) => {
-    try {
-        const data = await fs.readFile(dbFilePath, 'utf8');
-        const db = JSON.parse(data);
-        const menuItems = db.menuItems || [];
+  try {
+    const data = await fs.readFile(dbFilePath, 'utf8');
+    const db = JSON.parse(data);
+    const menuItems = db.menuItems || [];
 
-        if (menuItems.length === 0) {
-            return res.status(404).json({ error: "Không có món nào trong menu." });
-        }
-
-        res.json(menuItems);
-    } catch (err) {
-        console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
-        res.status(500).json({ error: "Lỗi máy chủ!" });
+    if (menuItems.length === 0) {
+      return res.status(404).json({ error: "Không có món nào trong menu." });
     }
+
+    res.json(menuItems);
+  } catch (err) {
+    console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
+    res.status(500).json({ error: "Lỗi máy chủ!" });
+  }
 });
 
 router.get('/order/:table', (req, res) => {
-    const table = req.params.table;
-    res.render('order', { table }); // Hiển thị trang order với thông tin bàn
-  });
+  const table = req.params.table;
+  res.render('order', { table });
+});
 
 // Lấy danh sách món ăn theo type
 router.get('/menu/type/:type', async (req, res) => {
-    try {
-        const data = await fs.readFile(dbFilePath, 'utf8');
-        const db = JSON.parse(data);
-        const menuItems = db.menuItems || [];
+  try {
+    const data = await fs.readFile(dbFilePath, 'utf8');
+    const db = JSON.parse(data);
+    const menuItems = db.menuItems || [];
 
-        // Lọc danh sách món theo type
-        const filteredItems = menuItems.filter(item => item.type === req.params.type);
+    const filteredItems = menuItems.filter(item => item.type === req.params.type);
 
-        res.json(filteredItems);
-    } catch (err) {
-        console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
-        res.status(500).json({ error: "Lỗi máy chủ!" });
-    }
+    res.json(filteredItems);
+  } catch (err) {
+    console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
+    res.status(500).json({ error: "Lỗi máy chủ!" });
+  }
 });
 
-// Hiển thị trang order
+// Thêm sản phẩm vào giỏ hàng
 router.post('/add', async (req, res) => {
-    const { itemId, quantity, tableNumber } = req.body;
+  const { itemId, quantity, tableNumber } = req.body;
 
-    try {
-        const data = await fs.readFile(dbFilePath, 'utf8');
-        const db = JSON.parse(data);
-        const menuItems = db.menuItems || [];
+  if (!itemId || !quantity || !tableNumber) {
+    return res.status(400).json({ success: false, error: 'Thiếu thông tin món ăn, số lượng hoặc số bàn.' });
+  }
 
-        // Tìm món ăn trong menu
-        const item = menuItems.find(i => String(i._id) === String(itemId));
-        if (!item) {
-            return res.status(404).json({ success: false, error: 'Món không tồn tại.' });
-        }
+  if (isNaN(quantity) || parseInt(quantity) <= 0) {
+    return res.status(400).json({ success: false, error: 'Số lượng phải là số dương.' });
+  }
 
-        // Tìm đơn hàng theo số bàn
-        let order = await Order.findOne({ tableNumber });
-        if (!order) {
-            // Nếu không tìm thấy đơn hàng, tạo mới
-            order = new Order({
-                tableNumber,
-                items: [],
-                total: 0,
-            });
-        }
+  try {
+    const data = await fs.readFile(dbFilePath, 'utf8');
+    const db = JSON.parse(data);
+    const menuItems = db.menuItems || [];
 
-        // Kiểm tra món ăn đã có trong giỏ hàng chưa
-        const existingItem = order.items.find(i => String(i.menuId) === String(itemId));
-        if (existingItem) {
-            existingItem.quantity += parseInt(quantity, 10);
-        } else {
-            order.items.push({
-                menuId: item._id,
-                name: item.name,
-                price: item.price,
-                quantity: parseInt(quantity, 10),
-            });
-        }
-        // Cập nhật tổng tiền
-        order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-        // Lưu đơn hàng
-        await order.save();
-
-        res.json({ success: true, message: `Đã thêm món vào giỏ hàng bàn ${tableNumber}!` });
-    } catch (err) {
-        console.error("❌ Lỗi khi thêm món vào giỏ hàng:", err);
-        res.status(500).json({ success: false, error: "Lỗi máy chủ!" });
+    const item = menuItems.find(i => String(i.id) === String(itemId));
+    if (!item) {
+      return res.status(404).json({ success: false, error: 'Món không tồn tại.' });
     }
+
+    let order = await Order.findOne({ tableNumber });
+    if (!order) {
+      order = new Order({
+        tableNumber,
+        items: [],
+        total: 0,
+        createdAt: new Date(),
+        status: 'pending'
+      });
+    }
+
+    const parsedQuantity = parseInt(quantity, 10);
+    const existingItemIndex = order.items.findIndex(i => String(i.menuId) === String(itemId));
+
+    if (existingItemIndex !== -1) {
+      order.items[existingItemIndex].quantity += parsedQuantity;
+    } else {
+      order.items.push({
+        menuId: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: parsedQuantity,
+        image: item.image || ''
+      });
+    }
+
+    order.total = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    await order.save();
+
+    res.json({ 
+      success: true, 
+      message: `Đã thêm ${quantity} ${item.name} vào giỏ hàng bàn ${tableNumber}!`,
+      order: {
+        tableNumber,
+        items: order.items,
+        total: order.total
+      }
+    });
+  } catch (err) {
+    console.error("❌ Lỗi khi thêm món vào giỏ hàng:", err);
+    res.status(500).json({ success: false, error: "Lỗi máy chủ!" });
+  }
+});
+
+// Lấy đơn hàng theo bàn
+router.get('/:tableNumber', async (req, res) => {
+  try {
+    const order = await Order.findOne({ tableNumber: req.params.tableNumber });
+    if (!order) {
+      return res.status(404).json({ items: [], total: 0 });
+    }
+    res.json(order);
+  } catch (err) {
+    console.error("❌ Lỗi khi lấy đơn hàng:", err);
+    res.status(500).json({ error: "Lỗi máy chủ!" });
+  }
+});
+
+// Hoàn tất đơn hàng
+router.post('/submit/:tableNumber', async (req, res) => {
+  try {
+    const order = await Order.findOne({ tableNumber: req.params.tableNumber });
+    if (!order) {
+      return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng!" });
+    }
+    order.status = 'completed';
+    await order.save();
+    res.json({ success: true, message: "Đặt món thành công!" });
+  } catch (err) {
+    console.error("❌ Lỗi khi hoàn tất đơn hàng:", err);
+    res.status(500).json({ success: false, error: "Lỗi máy chủ!" });
+  }
 });
 
 router.get('/', async (req, res) => {
-    try {
-        const orders = await Order.find({}); // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-        res.render('order/order', { orders }); // Truyền biến orders vào file order.ejs
-    } catch (err) {
-        console.error("❌ Lỗi khi tải trang order:", err);
-        res.status(500).send("Lỗi máy chủ!");
-    }
+  try {
+    const orders = await Order.find({});
+    res.render('order/order', { orders });
+  } catch (err) {
+    console.error("❌ Lỗi khi tải trang order:", err);
+    res.status(500).send("Lỗi máy chủ!");
+  }
 });
 
 router.get('/:table', (req, res) => {
-    const table = req.params.table;
-    res.render('orderDetail', { table });
+  const table = req.params.table;
+  res.render('orderDetail', { table });
 });
 
 module.exports = router;
