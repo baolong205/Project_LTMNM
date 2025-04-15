@@ -24,6 +24,11 @@ router.get('/menu/:tableNumber', async (req, res) => {
     }
 });
 
+router.get('/order/:table', (req, res) => {
+    const table = req.params.table;
+    res.render('order', { table }); // Hiển thị trang order với thông tin bàn
+  });
+
 // Lấy danh sách món ăn theo type
 router.get('/menu/type/:type', async (req, res) => {
     try {
@@ -100,6 +105,11 @@ router.get('/', async (req, res) => {
         console.error("❌ Lỗi khi tải trang order:", err);
         res.status(500).send("Lỗi máy chủ!");
     }
+});
+
+router.get('/:table', (req, res) => {
+    const table = req.params.table;
+    res.render('orderDetail', { table });
 });
 
 module.exports = router;
