@@ -24,6 +24,8 @@
   .cart-table th, .cart-table td {
       text-align: center;
       vertical-align: middle;
+      background-color: #662c21; /* Màu nền mới */
+      color: white;
   }
 
   .cart-summary {
@@ -66,16 +68,18 @@
 
 
   .btn-group .type-btn {
-    margin-right: 5px;
+    
+    margin-right: 0;
     text-align: center;
-    font-weight: bold;
     padding: 10px 15px;
     border-radius: 8px;
     transition: all 0.3s ease;
     color: black; /* Màu chữ mặc định */
     border: 2px solid #854d3c; /* Viền mặc định */
     background-color: white; /* Nền mặc định */
+    font-weight: normal; /* Đưa font chữ về bình thường */
   }
+  
 
   .btn-group .type-btn:last-child {
     margin-right: 0; /* Xóa khoảng cách nút cuối */
@@ -93,7 +97,7 @@
     border-color: #854d3c;
   }
 
-  .btn-group .type-btn,
+  
   .table-btn {
     margin-right: 5px;
     text-align: center;
@@ -102,7 +106,7 @@
     border-radius: 8px;
     transition: all 0.3s ease;
     color: black; /* Màu chữ mặc định */
-    border: 2px solid #854d3c; /* Viền mặc định */
+    border: 0 solid #854d3c; /* Viền mặc định */
     background-color: white; /* Nền mặc định */
   }
 
@@ -143,7 +147,7 @@
         <div class="btn-group" role="group" aria-label="Phân loại món">
           <button type="button" class="btn btn-outline-primary type-btn active flex-fill" data-type="all">Tất cả</button>
           <button type="button" class="btn btn-outline-primary type-btn" data-type="cà phê">Cà phê</button>
-          <button type="button" class="btn btn-outline-primary type-btn" data-type="trà">Trà</button>
+          <button type="button" class="btn btn-outline-primary type-btn" data-type="trà">Trà Sữa</button>
           <button type="button" class="btn btn-outline-primary type-btn" data-type="bánh">Bánh</button>
           <button type="button" class="btn btn-outline-primary type-btn" data-type="nước">Nước</button>
         </div>
@@ -211,6 +215,8 @@
   const tableButtons = document.querySelectorAll(".table-btn"); // Thêm dòng này
   let cart = [];
 
+  
+
   // Xử lý chọn bàn
   tableButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -233,6 +239,8 @@
         .catch((error) => console.error("Lỗi tải menu:", error));
     });
   });
+
+  
 
   // Hiển thị menu
   function renderMenu(menuItems) {
@@ -275,6 +283,9 @@
       });
     });
   }
+
+  
+  
 
   // Xử lý tìm kiếm
   searchButton.addEventListener("click", function () {
