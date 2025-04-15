@@ -180,13 +180,13 @@
       <!-- Danh sách món ăn -->
       <div class="col-md-8">
         <h3 class="mb-4">📜 Menu - <span id="selectedTable">Chọn bàn</span></h3>
-  
+
         <!-- Thanh tìm kiếm -->
         <div class="search-bar">
           <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm món ăn..." />
           <button id="searchButton">Tìm</button>
         </div>
-  
+
         <!-- Phân loại món -->
         <div class="mb-4">
           <div class="btn-group d-flex flex-wrap" role="group" aria-label="Phân loại món">
@@ -196,19 +196,15 @@
             <button type="button" class="btn type-btn flex-fill" data-type="bánh">🍰 Bánh</button>
             <button type="button" class="btn type-btn flex-fill" data-type="nước">🥤 Nước</button>
           </div>
-
         </div>
-  
+
         <!-- Menu sẽ render tại đây -->
         <div class="row row-cols-1 row-cols-md-2 g-4" id="menuContainer"></div>
-
-        
       </div>
-  
+
       <!-- Giỏ hàng -->
       <div class="col-md-4">
-  
-        <h3 class="mb-4 mt-4">🛒 Giỏ món</h3>
+        <h3 class="mb-4">🛒 Giỏ món</h3>
         <table class="table table-bordered cart-table">
           <thead class="table-dark">
             <tr>
@@ -229,17 +225,18 @@
         </div>
         <button class="btn btn-primary w-100 mt-3" id="orderButton">🧾 Đặt món</button>
 
-        <!-- Chọn bàn -->
-        <div class="mt-3">
-          <h4>🪑 Chọn bàn</h4>
-          <div class="d-flex flex-wrap gap-2">
-            <% for (let i = 1; i <= 12; i++) { %>
-            <button class="btn table-btn flex-fill" data-table="<%= i %>">Bàn <%= i %></button>
-            <% } %>
-          </div>
-        </div>
+         <!-- Chọn bàn -->
+    <div class="mt-5">
+      <h4>🪑 Chọn bàn</h4>
+      <div class="d-flex flex-wrap gap-2">
+        <% for (let i = 1; i <= 12; i++) { %>
+        <button class="btn table-btn flex-fill" data-table="<%= i %>">Bàn <%= i %></button>
+        <% } %>
       </div>
     </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Modal thông báo -->
@@ -318,7 +315,7 @@
                     <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item.id}" style="width: 80px;">
                   </div>
                   <button class="btn btn-primary btn-sm mt-2 add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
-                    Thêm
+                    Thêm món
                   </button>
                 </div>
               </div>
