@@ -59,53 +59,52 @@ exports.checkout = (req, res) => {
   // Xử lý logic thanh toán ở đây (ví dụ: lưu vào cơ sở dữ liệu)
   req.session.cart = []; // Xóa giỏ hàng sau khi thanh toán
   res.send('Đơn hàng của bạn đã được gửi thành công!');
-<<<<<<< HEAD
+
 };
 const getPendingItems = async (req, res) => {
-    try {
-      const orders = await Order.find({ "items.status": "pending" })
-        .populate("items.menuId");
-  
-      const pendingItems = [];
-  
-      orders.forEach(order => {
-        order.items.forEach(item => {
-          if (item.status === "pending") {
-            pendingItems.push({
-              orderId: order._id,
-              table: order.table,
-              menuName: item.menuId.name,
-              quantity: item.quantity,
-              itemId: item._id // cần để cập nhật trạng thái
-            });
-          }
-        });
+  try {
+    const orders = await Order.find({ "items.status": "pending" })
+      .populate("items.menuId");
+
+    const pendingItems = [];
+
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        if (item.status === "pending") {
+          pendingItems.push({
+            orderId: order._id,
+            table: order.table,
+            menuName: item.menuId.name,
+            quantity: item.quantity,
+            itemId: item._id // cần để cập nhật trạng thái
+          });
+        }
       });
-  
-      res.render('bartender/bartender', { pendingItems });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Lỗi server");
-    }
-  };
- 
+    });
+
+    res.render('bartender/bartender', { pendingItems });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Lỗi server");
+  }
+};
+
 const markItemDone = async (req, res) => {
-    const itemId = req.params.itemId;
-  
-    try {
-      await Order.updateOne(
-        { "items._id": itemId },
-        { $set: { "items.$.status": "done" } }
-      );
-      res.redirect('/bartender');
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Lỗi cập nhật trạng thái món");
-    }
-  };
-  module.exports = {
-    getPendingItems,
-    markItemDone
-=======
->>>>>>> cfed48751bbbc017bca2d2d5560b6587b36794c3
+  const itemId = req.params.itemId;
+
+  try {
+    await Order.updateOne(
+      { "items._id": itemId },
+      { $set: { "items.$.status": "done" } }
+    );
+    res.redirect('/bartender');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Lỗi cập nhật trạng thái món");
+  }
+};
+
+module.exports = {
+  getPendingItems,
+  markItemDone
 };
