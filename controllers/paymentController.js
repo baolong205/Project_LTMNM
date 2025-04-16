@@ -8,7 +8,7 @@ exports.getUnpaidTables = async (req, res) => {
     // Lọc danh sách bàn không trùng lặp
     const tableNumbers = [...new Set(unpaidOrders.map(order => order.tableNumber))];
 
-    res.render('order/payment_list', { tableNumbers });
+    res.render('payment/payment_list', { tableNumbers });
   } catch (error) {
     console.error('Lỗi khi lấy danh sách bàn chưa thanh toán:', error);
     res.status(500).send('Lỗi máy chủ');
@@ -23,7 +23,7 @@ exports.getPaymentPage = async (req, res) => {
     const order = await Order.findOne({ tableNumber, isPaid: false }).populate('items.menuItem');
 
     if (!order || order.items.length === 0) {
-      return res.render('order/payment', {
+      return res.render('payment/payment', {
         cart: [],
         total: 0,
         tableNumber,
@@ -35,7 +35,7 @@ exports.getPaymentPage = async (req, res) => {
       return sum + item.menuItem.price * item.quantity;
     }, 0);
 
-    res.render('order/payment', {
+    res.render('payment/payment', {
       cart: order.items,
       total,
       tableNumber,
@@ -45,4 +45,35 @@ exports.getPaymentPage = async (req, res) => {
     console.error('Lỗi khi lấy dữ liệu thanh toán:', error);
     res.status(500).send('Lỗi máy chủ');
   }
+};
+
+// Xử lý thanh toán và xóa đơn hàng (dùng cho /payment/confirm/:tableNumber)
+exports.confirmPayment = async (req, res) => {
+  try {
+    const tableNumber = req.params.tableNumber;
+
+    // Xóa đơn hàng chưa thanh toán của bàn này khỏi MongoDB
+    const result = await Order.deleteOne({ tableNumber, isPaid: false });
+
+    if (result.deletedCount === 0) {
+      return res.render('payment/payment', {
+        cart: [],
+        total: 0,
+        tableNumber,
+        successMessage: 'Không tìm thấy đơn hàng để thanh toán.'
+      });
+    }
+
+    // Chuyển hướng về danh sách bàn chưa thanh toán
+    res.redirect('/payment/list');
+  } catch (error) {
+    console.error('Lỗi khi xác nhận thanh toán:', error);
+    res.status(500).send('Lỗi máy chủ');
+  }
+};
+
+module.exports = {
+  getUnpaidTables,
+  getPaymentPage,
+  confirmPayment
 };
