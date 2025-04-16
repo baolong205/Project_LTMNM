@@ -1,5 +1,6 @@
 const Order = require('../models/order');
 const MenuItem = require('../models/MenuItem');
+const Inventory = require('../models/Inventory');
 const moment = require('moment');
 
 // Lấy các đơn hàng đang chờ
@@ -71,24 +72,6 @@ const completeOrder = async (req, res) => {
     res.status(500).send('Lỗi server: ' + error.message);
   }
 };
-
-// Trang chính bartender (hiển thị danh sách đơn hàng đang chờ)
-const getBartenderPage = async (req, res) => {
-  try {
-    const orders = await Order.find({
-      status: { $in: ['Pending', 'InProgress'] }
-    }).sort({ createdAt: -1 });
-
-    res.render('bartender/bartender', {
-      orders,
-      user: req.session.user || { name: 'Nhân viên pha chế' }, // Truyền user từ session
-    });
-  } catch (err) {
-    console.error('Lỗi lấy dữ liệu order:', err);
-    res.status(500).send('Lỗi server');
-  }
-};
-
 // Đánh dấu món đã hoàn thành
 const markItemAsComplete = async (req, res) => {
   try {
@@ -143,11 +126,70 @@ const getCompletedOrders = async (req, res) => {
   }
 };
 
+const getBartenderPage = async (req, res) => {
+  try {
+    // Tìm các đơn hàng với status là pending hoặc inprogress
+    const orders = await Order.find({ 
+      status: { $in: ["pending", "inprogress"] } 
+    }).sort({ createdAt: -1 });
+    
+    console.log('Số lượng đơn hàng đang chờ:', orders.length);
+    
+    // Định dạng đơn hàng theo đúng cấu trúc
+    const formattedOrders = orders.map(order => {
+      return {
+        _id: order._id,
+        tableNumber: order.tableNumber || order.table || 'Không xác định',
+        time: Math.floor((Date.now() - new Date(order.createdAt || Date.now())) / 60000),
+        status: order.status,
+        items: (order.items || []).map(item => ({
+          _id: item._id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          status: item.status || 'pending'
+        }))
+      };
+    });
+    
+    res.render('bartender/bartender', {
+      orders: formattedOrders,
+      user: req.session?.user || { name: 'Nhân viên pha chế' },
+    });
+  } catch (err) {
+    console.error('Lỗi lấy dữ liệu order:', err);
+    res.status(500).send('Lỗi server');
+  }
+};
+
+// Thêm hàm xử lý đánh dấu món đã hoàn thành
+const markItemComplete = async (req, res) => {
+  try {
+    const { orderId, itemId } = req.body;
+    
+    // Tìm đơn hàng và cập nhật trạng thái món
+    const result = await Order.updateOne(
+      { "_id": orderId, "items._id": itemId },
+      { $set: { "items.$.status": "completed" } }
+    );
+    
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy món hoặc đơn hàng' });
+    }
+    
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Lỗi khi đánh dấu món đã hoàn thành:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
+  }
+};
+
 module.exports = {
   getPendingOrders,
   startPreparing,
   completeOrder,
   getBartenderPage,
+  markItemComplete, // Thêm hàm mới vào exports
   markItemAsComplete,
   getCompletedOrders,
 };

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý Kho</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #e6d2b5;
+      color: #333;
+    }
+    
+    header {
+      background-color: #5d2906;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .nav-title {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .nav-right i, .nav-left i {
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .nav-right i:hover, .nav-left i:hover {
+      color: #e6d2b5;
+    }
+    
+    .page-title {
+      padding: 1.5rem;
+      background-color: #e6d2b5;
+      text-align: center;
+      font-weight: bold;
+      color: #5d2906;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-bottom: 1px solid #d1b795;
+      margin-bottom: 0;
+    }
+    
+    .page-title h3 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    /* CSS cho các tab */
+    .tabs {
+      display: flex;
+      background-color: #d1b795;
+      border-bottom: 1px solid #c4a775;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .tab {
+      padding: 12px 24px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-weight: bold;
+      color: #5d2906;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .tab:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .tab.active {
+      background-color: #e6d2b5;
+      color: #5d2906;
+    }
+    
+    .tab.active:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #5d2906;
+    }
+    
+    /* CSS cho các nút trong action-buttons */
+    .action-buttons {
+      display: flex;
+      padding: 0.75rem;
+      background-color: #e6d2b5;
+      gap: 10px;
+      margin: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    
+    .action-buttons button {
+      padding: 0.65rem 1.25rem;
+      background-color: #5d2906;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .action-buttons button:hover {
+      background-color: #7a3409;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .action-buttons button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* Nút với biểu tượng */
+    .action-buttons button i {
+      font-size: 1.1rem;
+    }
+    
+    #btnThem i {
+      color: #8dca8d;
+    }
+    
+    #btnSua i {
+      color: #e6c07b;
+    }
+    
+    #btnXoa i {
+      color: #ef9a9a;
+    }
+    
+    #btnThongKe i {
+      color: #90caf9;
+    }
+    
+    /* CSS cho bảng */
+    .table-container {
+      padding: 0 15px 20px;
+    }
+    
+    .inventory-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .inventory-table th {
+      background-color: #c4a775;
+      padding: 1rem;
+      text-align: left;
+      color: #5d2906;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .inventory-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #d1b795;
+      background-color: #ead9c4;
+    }
+    
+    .inventory-table tr:nth-child(even) td {
+      background-color: #e2d3bc;
+    }
+    
+    .inventory-table tr:hover td {
+      background-color: #d8c4a5;
+    }
+    
+    .inventory-table tr.selected td {
+      background-color: #c4a775;
+    }
+    
+    /* CSS cho các nút trong hàng của bảng */
+    .btn-edit, .btn-delete {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      margin-right: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .btn-edit {
+      background-color: #e6c07b;
+      color: #5d2906;
+    }
+    
+    .btn-edit:hover {
+      background-color: #d4a95a;
+    }
+    
+    .btn-delete {
+      background-color: #c25e5e;
+      color: white;
+    }
+    
+    .btn-delete:hover {
+      background-color: #b04343;
+    }
+    
+    /* CSS cho message box */
+    .message-box {
+      margin: 15px;
+      padding: 10px 15px;
+      border-radius: 4px;
+      background-color: #dff0d8;
+      color: #3c763d;
+      border-left: 4px solid #3c763d;
+      display: none;
+    }
+    
+    .message-box.error {
+      background-color: #f2dede;
+      color: #a94442;
+      border-left-color: #a94442;
+    }
+    
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      background-color: #5d2906;
+      color: #e6d2b5;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .action-buttons {
+        flex-wrap: wrap;
+      }
+      
+      .action-buttons button {
+        flex: 1 0 calc(50% - 10px);
+      }
+      
+      .inventory-table th:nth-child(3),
+      .inventory-table td:nth-child(3) {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .action-buttons button {
+        flex: 1 0 100%;
+      }
+      
+      .inventory-table th:nth-child(4),
+      .inventory-table td:nth-child(4) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-left">
+    <i class="fas fa-bars"></i>
+    <div class="nav-title">
+      <i class="fas fa-warehouse"></i> Quản lý Kho
+    </div>
+  </div>
+  <div class="nav-right">
+    <i class="fas fa-wifi"></i>
+    <i class="fas fa-question-circle"></i>
+    <a href="auth/login" class="">
+      <i class="fas fa-power-off"></i>
+    </a>
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %></div>
+  </div>
+</header>
+
+<div class="page-title">
+  <h3>Quản lý Kho Nguyên Liệu</h3>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tabThemNL">Quản lý nguyên liệu</button>
+  <button class="tab" id="tabNhapKho">Nhập kho</button>
+  <button class="tab" id="tabXuatKho">Xuất kho</button>
+  <button class="tab" id="tabThongKe">Thống kê tồn kho</button>
+</div>
+
+<div id="messageBox" class="message-box">
+  <!-- Thông báo sẽ được hiển thị ở đây -->
+</div>
+
+<div class="action-buttons">
+  <button id="btnThem"><i class="fas fa-plus-circle"></i> Thêm nguyên liệu</button>
+  <button id="btnSua"><i class="fas fa-edit"></i> Sửa</button>
+  <button id="btnXoa"><i class="fas fa-trash-alt"></i> Xóa</button>
+  <button id="btnThongKe"><i class="fas fa-chart-bar"></i> Thống kê tồn kho</button>
+</div>
+
+<div class="table-container">
+  <table class="inventory-table">
+    <thead>
+      <tr>
+        <th>Tên nguyên liệu</th>
+        <th>Số lượng</th>
+        <th>Đơn vị</th>
+        <th>Giá nhập</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (items && items.length > 0) { %>
+        <% items.forEach(item => { %>
+          <tr data-id="<%= item._id %>">
+            <td><%= item.name %></td>
+            <td><%= item.quantity %></td>
+            <td><%= item.unit || 'Đơn vị' %></td>
+            <td><%= item.price ? item.price.toLocaleString('vi-VN') : 0 %> VND</td>
+            <td>
+              <button class="btn-edit" data-id="<%= item._id %>"><i class="fas fa-edit"></i> Sửa</button>
+              <button class="btn-delete" data-id="<%= item._id %>"><i class="fas fa-trash-alt"></i> Xóa</button>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" style="text-align: center;">Không có dữ liệu nguyên liệu</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  <div>© 2023 Quán Cafe - All Rights Reserved</div>
+</footer>
+
+<script>
+  // Function để hiển thị thông báo
+  function showMessage(message, isError = false) {
+    const messageBox = document.getElementById('messageBox');
+    messageBox.textContent = message;
+    messageBox.style.display = 'block';
+    
+    if (isError) {
+      messageBox.classList.add('error');
+    } else {
+      messageBox.classList.remove('error');
+    }
+    
+    // Tự động ẩn sau 3 giây
+    setTimeout(() => {
+      messageBox.style.display = 'none';
+    }, 3000);
+  }
+  
+  // Xử lý nút Thêm nguyên liệu
+  document.getElementById('btnThem').addEventListener('click', function() {
+    // Chuyển hướng đến trang thêm mới
+    window.location.href = '/inventory/add';
+  });
+  
+  // Xử lý nút Sửa
+  document.getElementById('btnSua').addEventListener('click', function() {
+    // Kiểm tra xem đã chọn dòng nào chưa
+    const selectedRow = document.querySelector('.inventory-table tbody tr.selected');
+    if (selectedRow) {
+      const id = selectedRow.getAttribute('data-id');
+      window.location.href = `/inventory/edit/${id}`;
+    } else {
+      showMessage('Vui lòng chọn một nguyên liệu để sửa', true);
+    }
+  });
+  
+  // Xử lý nút Xóa
+  document.getElementById('btnXoa').addEventListener('click', function() {
+    // Kiểm tra xem đã chọn dòng nào chưa
+    const selectedRow = document.querySelector('.inventory-table tbody tr.selected');
+    if (selectedRow) {
+      const id = selectedRow.getAttribute('data-id');
+      if (confirm('Bạn có chắc chắn muốn xóa nguyên liệu này?')) {
+        window.location.href = `/inventory/delete/${id}`;
+      }
+    } else {
+      showMessage('Vui lòng chọn một nguyên liệu để xóa', true);
+    }
+  });
+  
+  // Xử lý nút Thống kê NVL tồn kho
+  document.getElementById('btnThongKe').addEventListener('click', function() {
+    window.location.href = '/inventory/statistics';
+  });
+  
+  // Xử lý chọn dòng khi click
+  document.querySelectorAll('.inventory-table tbody tr').forEach(row => {
+    row.addEventListener('click', function() {
+      // Bỏ chọn dòng khác nếu có
+      document.querySelectorAll('.inventory-table tbody tr').forEach(r => {
+        r.classList.remove('selected');
+      });
+      
+      // Chọn dòng hiện tại
+      this.classList.add('selected');
+    });
+  });
+  
+  // Xử lý các nút sửa và xóa trên từng dòng
+  document.querySelectorAll('.btn-edit').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation(); // Ngăn sự kiện nổi bọt
+      const id = this.getAttribute('data-id');
+      window.location.href = `/inventory/edit/${id}`;
+    });
+  });
+  
+  document.querySelectorAll('.btn-delete').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation(); // Ngăn sự kiện nổi bọt
+      const id = this.getAttribute('data-id');
+      if(confirm('Bạn có chắc muốn xóa nguyên liệu này?')) {
+        window.location.href = `/inventory/delete/${id}`;
+      }
+    });
+  });
+  
+  // Xử lý các tab
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Loại bỏ active từ tất cả các tab
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      
+      // Đặt active cho tab được click
+      this.classList.add('active');
+      
+      // Xử lý chuyển tab
+      const tabId = this.id;
+      if (tabId === 'tabThemNL') {
+        // Mặc định hiển thị danh sách nguyên liệu
+      } else if (tabId === 'tabNhapKho') {
+        showMessage('Chức năng Nhập kho đang được phát triển');
+      } else if (tabId === 'tabXuatKho') {
+        showMessage('Chức năng Xuất kho đang được phát triển');
+      } else if (tabId === 'tabThongKe') {
+        window.location.href = '/inventory/statistics';
+      }
+    });
+  });
+  
+  // Kiểm tra xem URL có chứa thông báo thành công không
+  const urlParams = new URLSearchParams(window.location.search);
+  const successMessage = urlParams.get('success');
+  if (successMessage) {
+    showMessage(decodeURIComponent(successMessage));
+  }
+  
+  const errorMessage = urlParams.get('error');
+  if (errorMessage) {
+    showMessage(decodeURIComponent(errorMessage), true);
+  }
+</script>
+
+</body>
+</html>
