@@ -9,94 +9,254 @@
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
-      background-color: #f3f1f0;
+      background-color: #e6d2b5;
+      color: #333;
     }
+    
     header {
-      background-color: #0c100c;
+      background-color: #5d2906;
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
+    
     .nav-left, .nav-right {
       display: flex;
       align-items: center;
       gap: 1.5rem;
     }
+    
     .nav-title {
       font-size: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: 600;
     }
+    
+    .nav-right i, .nav-left i {
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .nav-right i:hover, .nav-left i:hover {
+      color: #e6d2b5;
+    }
+    
+    /* CSS cho tab trong header */
+    .nav-tab {
+      padding: 1rem 1.5rem;
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-tab:hover, .nav-tab.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-bottom: 3px solid #e6d2b5;
+    }
+    
+    /* CSS cho các nút action */
+    .action-buttons {
+      padding: 0.75rem 1.5rem;
+      background-color: #f0e5d6;
+      display: flex;
+      gap: 0.75rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
     .btn {
       border: none;
-      border-radius: 5px;
-      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      padding: 0.6rem 1.2rem;
       font-weight: bold;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .btn-red { background: #e74c3c; color: white; }
-    .btn-green { background: #2ecc71; color: white; }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .btn-red { 
+      background: #c0392b; 
+      color: white; 
+    }
+    
+    .btn-red:hover {
+      background: #e74c3c;
+    }
+    
+    .btn-green { 
+      background: #27ae60; 
+      color: white; 
+    }
+    
+    .btn-green:hover {
+      background: #2ecc71;
+    }
 
+    /* CSS cho main content */
     main {
       display: flex;
+      flex-wrap: wrap;
       gap: 1.5rem;
       padding: 1.5rem;
-      flex-wrap: wrap;
+      align-items: flex-start;
     }
+    
     .order-card {
-      background: #f0f0f0;
-      border-radius: 6px;
+      background: #f8f5f0;
+      border-radius: 8px;
       width: 300px;
       padding: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       position: relative;
+      border-top: 4px solid #5d2906;
+      transition: transform 0.2s ease, opacity 0.5s ease;
     }
+    
+    .order-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    
     .order-header {
-      background: #ccc;
-      padding: 0.5rem;
-      border-radius: 4px;
+      background: #d8c6ad;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
       font-weight: bold;
+      color: #5d2906;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.1rem;
     }
+    
+    .order-header .order-id {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    
     .order-time {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 14px;
+      right: 16px;
       font-weight: bold;
       display: flex;
       align-items: center;
       gap: 5px;
+      color: #7f5539;
     }
+    
+    .items-container {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    
+    .items-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .items-container::-webkit-scrollbar-track {
+      background: #f0e5d6;
+      border-radius: 3px;
+    }
+    
+    .items-container::-webkit-scrollbar-thumb {
+      background: #c4a775;
+      border-radius: 3px;
+    }
+    
     .item {
       background: white;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 0.3rem 0;
+      margin: 0.5rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
     }
-    .item.done {
-      background: #bdc3c7;
-      color: white;
-      text-decoration: line-through;
+    
+    .item:hover {
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
     }
+    
+    .all-completed {
+      text-align: center;
+      padding: 1rem;
+      color: #27ae60;
+      font-weight: bold;
+      background: #edf7ed;
+      border-radius: 6px;
+      margin: 0.5rem 0;
+    }
+    
+    .item-name {
+      font-weight: 500;
+    }
+    
+    .item-quantity {
+      background: #f0e5d6;
+      color: #5d2906;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    
     .item button {
       background: none;
       border: none;
       cursor: pointer;
       font-size: 1.1rem;
       color: #27ae60;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
     }
-
+    
+    .item button:hover {
+      background: #f0f0f0;
+      transform: scale(1.1);
+    }
+    
+    /* CSS cho footer */
     footer {
       display: flex;
       gap: 1rem;
       padding: 1rem 2rem;
       flex-wrap: wrap;
+      justify-content: center;
+      background-color: #f0e5d6;
+      margin-top: 2rem;
     }
+    
     .footer-card {
       width: 180px;
       padding: 1rem;
@@ -105,19 +265,55 @@
       text-align: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       position: relative;
+      transition: transform 0.2s ease;
     }
+    
+    .footer-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
     .footer-card.red { background: #c0392b; color: white; }
     .footer-card.orange { background: #d35400; color: white; }
     .footer-card.green { background: #27ae60; color: white; }
+    
     .footer-card .hot {
       position: absolute;
       top: -8px;
       right: -8px;
       background: red;
       color: white;
-      padding: 2px 5px;
-      border-radius: 5px;
-      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .no-orders {
+      width: 100%;
+      text-align: center;
+      padding: 3rem 0;
+      color: #7f5539;
+      font-size: 1.2rem;
+    }
+    
+    .no-orders i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    /* CSS cho responsive */
+    @media (max-width: 768px) {
+      main {
+        justify-content: center;
+      }
+      
+      .order-card {
+        width: 100%;
+        max-width: 400px;
+      }
     }
   </style>
 </head>
@@ -126,48 +322,126 @@
 <header>
   <div class="nav-left">
     <i class="fas fa-bars"></i>
-    <div class="nav-title"><i class="fas fa-clipboard-list"></i> DS món chế biến</div>
-    <button class="btn btn-red"><i class="fas fa-bell"></i> Báo hết</button>
-    <button class="btn btn-green"><i class="fas fa-bell-concierge"></i> Trả hết</button>
+    <a href="/bartender" class="nav-tab active">
+      <i class="fas fa-clipboard-list"></i> DS món chế biến
+    </a>
+    <a href="/inventory" class="nav-tab">
+      <i class="fas fa-warehouse"></i> Quản lý Kho
+    </a>
   </div>
   <div class="nav-right">
+    <a href="auth/login" class="">
+      <i class="fas fa-power-off"></i>
+    </a>
     <i class="fas fa-wifi"></i>
     <i class="fas fa-question-circle"></i>
-    <i class="fas fa-power-off"></i>
-    <div><i class="fas fa-user"></i> <%= user.name %></div>
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' ? user.name : 'Nhân viên pha chế' %></div>
   </div>
+  
 </header>
 
+<div class="action-buttons">
+  <button class="btn btn-red"><i class="fas fa-bell"></i> Báo hết</button>
+  <button class="btn btn-green"><i class="fas fa-bell-concierge"></i> Trả hết</button>
+</div>
+
 <main>
-  <% orders.forEach(order => { %>
-    <div class="order-card">
-      <div class="order-header">Bàn <%= order.tableNumber %></div>
+  <% if (typeof orders !== 'undefined' && orders && orders.length > 0) { %>
+    <% 
+      // Lọc ra những order có ít nhất một món chưa hoàn thành
+      const pendingOrders = orders.filter(order => 
+        order.items && order.items.some(item => 
+          item.status !== 'done' && item.status !== 'completed'
+        )
+      );
       
-      <% order.items.forEach(item => { %>
-        <div class="item <%= item.status === 'done' ? 'done' : '' %>">
-          <span><%= item.name %> (<%= item.quantity %>)</span>
-          <% if (item.status !== 'done') { %>
-            <button onclick="markItemDone('<%= order._id %>', '<%= item._id %>', this)">
-              <i class="fas fa-bell"></i>
-            </button>
+      if (pendingOrders.length > 0) {
+        pendingOrders.forEach(order => { 
+    %>
+      <div class="order-card" id="order-<%= order._id %>">
+        <div class="order-header">
+          <span>Bàn <%= order.tableNumber || order.table || 'Không xác định' %></span>
+          <span class="order-id">#<%= order._id.toString().substr(-4) %></span>
+        </div>
+        
+        <% if (typeof order.time !== 'undefined') { %>
+          <div class="order-time">
+            <i class="fas fa-clock"></i> <%= order.time %> phút
+          </div>
+        <% } %>
+        
+        <div class="items-container">
+          <% if (order.items && order.items.length > 0) { %>
+            <% 
+              // Lọc ra các món chưa hoàn thành
+              const pendingItems = order.items.filter(item => 
+                item.status !== 'done' && item.status !== 'completed'
+              );
+              
+              pendingItems.forEach(item => { 
+            %>
+              <div class="item" id="item-<%= item._id %>">
+                <div class="item-info">
+                  <span class="item-name"><%= item.name %></span>
+                </div>
+                <div class="item-actions">
+                  <span class="item-quantity">x<%= item.quantity %></span>
+                  <button onclick="markItemDone('<%= order._id %>', '<%= item._id %>', this)">
+                    <i class="fas fa-bell"></i>
+                  </button>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="no-items">Không có món nào</div>
           <% } %>
         </div>
-      <% }) %>
+      </div>
+    <% 
+        }) 
+      } else { 
+    %>
+      <div class="no-orders">
+        <i class="fas fa-mug-hot"></i>
+        <p>Không có đơn hàng nào cần xử lý</p>
+      </div>
+    <% } %>
+  <% } else { %>
+    <div class="no-orders">
+      <i class="fas fa-mug-hot"></i>
+      <p>Không có đơn hàng nào cần xử lý</p>
     </div>
-  <% }) %>
-  
+  <% } %>
 </main>
 
 <footer>
-  <% orders.forEach((order, idx) => {
-    let colorClass = idx === 0 ? 'green' : idx === 1 ? 'orange' : 'red';
-  %>
-    <div class="footer-card <%= colorClass %>">
-      <% if (idx === 0) { %><div class="hot">HOT</div><% } %>
-      <div><strong>Bàn <%= order.table %> - Tầng <%= order.floor %></strong></div>
-      <div><%= order.time %> phút <i class="fas fa-clock"></i></div>
-    </div>
-  <% }) %>
+  <% if (typeof orders !== 'undefined' && orders && orders.length > 0) { %>
+    <% 
+      // Lọc ra các đơn hàng có món chưa hoàn thành cho footer
+      const pendingOrdersForFooter = orders
+        .filter(order => 
+          order.items && order.items.some(item => 
+            item.status !== 'done' && item.status !== 'completed'
+          )
+        )
+        .slice(0, 20);
+      
+      pendingOrdersForFooter.forEach((order, idx) => {
+        let colorClass = idx === 0 ? 'green' : idx === 1 ? 'orange' : 'red';
+    %>
+      <div class="footer-card <%= colorClass %>" id="footer-<%= order._id %>">
+        <% if (idx === 0) { %><div class="hot">HOT</div><% } %>
+        <div><strong>Bàn <%= order.tableNumber || order.table || 'N/A' %></strong></div>
+        <div>
+          <% if (typeof order.time !== 'undefined') { %>
+            <%= order.time %> phút <i class="fas fa-clock"></i>
+          <% } else { %>
+            <i class="fas fa-clock"></i> Đang chờ
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
 </footer>
 
 <script>
@@ -180,10 +454,52 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ orderId, itemId })
       });
+      
       if (res.ok) {
+        // Xóa món khỏi danh sách thay vì chỉ thêm class done
         const itemDiv = btn.closest('.item');
-        itemDiv.classList.add('done');
-        btn.remove();
+        itemDiv.remove();
+        
+        // Kiểm tra xem trong order card còn món nào không
+        const orderCard = document.getElementById(`order-${orderId}`);
+        const remainingItems = orderCard.querySelectorAll('.item');
+        
+        if (remainingItems.length === 0) {
+          // Nếu không còn món nào, thêm thông báo tất cả món đã hoàn thành
+          const itemsContainer = orderCard.querySelector('.items-container');
+          const allCompletedDiv = document.createElement('div');
+          allCompletedDiv.className = 'all-completed';
+          allCompletedDiv.textContent = 'Tất cả món đã hoàn thành';
+          itemsContainer.appendChild(allCompletedDiv);
+          
+          // Sau 2 giây, ẩn order card
+          setTimeout(() => {
+            orderCard.style.opacity = '0';
+            orderCard.style.transform = 'translateY(-10px)';
+            
+            // Sau khi animation hoàn thành, xóa order card
+            setTimeout(() => {
+              orderCard.remove();
+              
+              // Xóa footer card tương ứng nếu có
+              const footerCard = document.getElementById(`footer-${orderId}`);
+              if (footerCard) {
+                footerCard.remove();
+              }
+              
+              // Kiểm tra xem còn order card nào không
+              const remainingOrders = document.querySelectorAll('.order-card');
+              if (remainingOrders.length === 0) {
+                // Nếu không còn order card nào, hiển thị thông báo không có đơn hàng
+                const main = document.querySelector('main');
+                const noOrdersDiv = document.createElement('div');
+                noOrdersDiv.className = 'no-orders';
+                noOrdersDiv.innerHTML = '<i class="fas fa-mug-hot"></i><p>Không có đơn hàng nào cần xử lý</p>';
+                main.appendChild(noOrdersDiv);
+              }
+            }, 500);
+          }, 2000);
+        }
       } else {
         alert('Lỗi khi cập nhật món.');
         btn.innerHTML = '<i class="fas fa-bell"></i>';
@@ -196,6 +512,15 @@
       btn.disabled = false;
     }
   }
+
+  // Kiểm tra nếu có thông báo
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+    if (message) {
+      alert(decodeURIComponent(message));
+    }
+  });
 </script>
 
 </body>

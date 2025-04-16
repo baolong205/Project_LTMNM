@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý Kho</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #e6d2b5;
+    }
+    header {
+      background-color: #5d2906;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-tab {
+      padding: 1rem 1.5rem;
+      color: white;
+      text-decoration: none;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    .nav-tab:hover, .nav-tab.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-bottom: 3px solid white;
+    }
+    
+    .page-title {
+      padding: 1rem;
+      background-color: #e6d2b5;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .action-buttons {
+      display: flex;
+      padding: 0.5rem;
+      background-color: #e6d2b5;
+    }
+    
+    .action-buttons button {
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .action-buttons button:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .inventory-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .inventory-table th {
+      background-color: #d1b795;
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid #d1b795;
+    }
+    
+    .inventory-table td {
+      padding: 0.75rem;
+      border: 1px solid #d1b795;
+      background-color: #e2d3bc;
+    }
+    
+    .inventory-table tr:nth-child(even) td {
+      background-color: #ead9c4;
+    }
+    
+    footer {
+      padding: 1rem;
+      text-align: center;
+      background-color: #e6d2b5;
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-left">
+    <i class="fas fa-bars"></i>
+    <a href="/bartender" class="nav-tab">
+      <i class="fas fa-clipboard-list"></i> DS món chế biến
+    </a>
+    <a href="/bartender/inventory" class="nav-tab active">
+      <i class="fas fa-warehouse"></i> Quản lý Kho
+    </a>
+  </div>
+  <div class="nav-right">
+    <i class="fas fa-wifi"></i>
+    <i class="fas fa-question-circle"></i>
+    <i class="fas fa-power-off"></i>
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' && user ? user.name : 'Nhân viên pha chế' %></div>
+  </div>
+</header>
+
+<div class="page-title">
+  <h3>Màn hình chính Kho của NV PHA CHẾ</h3>
+</div>
+
+<div class="action-buttons">
+  <button id="btnThem">Thêm</button>
+  <button id="btnSua">Sửa</button>
+  <button id="btnXoa">Xóa</button>
+  <button id="btnThongKe">Thống kê NVL tồn kho</button>
+</div>
+
+<table class="inventory-table">
+  <thead>
+    <tr>
+      <th>Ngày</th>
+      <th>Mã phiếu</th>
+      <th>Loại phiếu</th>
+      <th>Số tiền</th>
+      <th>Người tạo phiếu</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (inventoryRecords && inventoryRecords.length > 0) { %>
+      <% inventoryRecords.forEach(record => { %>
+        <tr>
+          <td><%= record.date ? new Date(record.date).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN') %></td>
+          <td><%= record.code || 'N/A' %></td>
+          <td><%= record.type || 'N/A' %></td>
+          <td><%= record.amount ? record.amount.toLocaleString('vi-VN') : 0 %> VND</td>
+          <td><%= record.createdBy || 'N/A' %></td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="5" style="text-align: center;">Không có dữ liệu</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<footer>
+  <div>© 2023 Quán Cafe - All Rights Reserved</div>
+</footer>
+
+<script>
+  document.getElementById('btnThem').addEventListener('click', function() {
+    // Xử lý khi bấm nút Thêm
+    alert('Chức năng Thêm đang được phát triển');
+  });
+  
+  document.getElementById('btnSua').addEventListener('click', function() {
+    // Xử lý khi bấm nút Sửa
+    alert('Chức năng Sửa đang được phát triển');
+  });
+  
+  document.getElementById('btnXoa').addEventListener('click', function() {
+    // Xử lý khi bấm nút Xóa
+    alert('Chức năng Xóa đang được phát triển');
+  });
+  
+  document.getElementById('btnThongKe').addEventListener('click', function() {
+    // Xử lý khi bấm nút Thống kê NVL tồn kho
+    alert('Chức năng Thống kê đang được phát triển');
+  });
+</script>
+
+</body>
+</html>
