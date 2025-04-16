@@ -109,6 +109,116 @@
       "price": 20000,
       "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgjPUq-4Zqau9DePFc0hbBBPfk837j5mHRQQ&s",
       "type": "bánh"
+    },
+    {
+      "id": 11,
+      "code": "ST02",
+      "name": "Sinh tố dưa hấu",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://www.cet.edu.vn/wp-content/uploads/2020/06/cach-lam-nuoc-ep-dua-hau.jpg",
+      "type": "nước"
+    },
+    {
+      "id": 12,
+      "code": "ST03",
+      "name": "Sinh tố chuối",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000,
+      "image": "https://bizweb.dktcdn.net/100/004/714/articles/sinh-to-chuoi-ngon.jpg?v=1569555254917",
+      "type": "nước"
+    },
+    {
+      "id": 13,
+      "code": "CF04",
+      "name": "Cà phê Muối",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000,
+      "image": "https://cdn.congthuong.vn/stores/news_dataimages/2023/092023/30/15/in_article/ca-phe-muoi-220230930151322.png?rt=20230930151323",
+      "type": "cà phê"
+    },
+    {
+      "id": 14,
+      "code": "CF04",
+      "name": "Cà phê Espresso",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://thegioimaypha.com/wp-content/uploads/2021/07/ca-phe-espresso.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 15,
+      "code": "TR03",
+      "name": "Trà dâu",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 50000,
+      "image": "https://checkinvietnam.vtc.vn/media/20210701/images/tra-dau-ngam.jpeg",
+      "type": "trà"
+    },
+    {
+      "id": 16,
+      "code": "CF05",
+      "name": "Cà phê phin",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 20000,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TP6Y45D2EoFaIyFNtlXCGfIE33HfvD0cfg&s",
+      "type": "cà phê"
+    },
+    {
+      "id": 17,
+      "code": "ST04",
+      "name": "Sinh tố cần tây",
+      "group": "SInh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://hc.com.vn/i/ecommerce/media/ck3208650-cong-thuc-sinh-to-can-tay-3.jpg",
+      "type": "nước"
+    },
+    {
+      "id": 18,
+      "code": "TA04",
+      "name": "Bánh pho mát",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 38000,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Baked_cheesecake_with_raspberries_and_blueberries.jpg/800px-Baked_cheesecake_with_raspberries_and_blueberries.jpg",
+      "type": "bánh"
+    },
+    {
+      "id": 19,
+      "code": "TA03",
+      "name": "Bánh Red Velvet",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 40000,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1dk9gDFWfUgd5Jp6SZXa2S5G1bFQtsXBqwQ&s",
+      "type": "bánh"
+    },
+    {
+      "id": 20,
+      "code": "TA02",
+      "name": "Bánh mì Riramisu",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 10000,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtCLoMDlfzI3VN-rpyVInvQ0DFlyhv4wqwlQ&s",
+      "type": "bánh"
     }
   ],
   "users": [
