@@ -1,0 +1,140 @@
+<%- include('../partials/header') %>
+
+<style>
+  body {
+    background-color: #f5deb3; /* Màu nền nâu nhạt giống trong hình */
+    font-family: Arial, sans-serif;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h3 {
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .list-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cột đều nhau */
+    gap: 20px; /* Khoảng cách giữa các thẻ */
+    justify-items: center;
+  }
+
+  .list-group-item {
+    background-color: #d2b48c; /* Màu nâu nhạt cho thẻ */
+    border-radius: 15px;
+    width: 100%; /* Chiếm toàn bộ chiều rộng cột */
+    max-width: 300px; /* Giới hạn chiều rộng thẻ */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+  }
+
+  .list-group-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .table-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .table-info .clock-icon {
+    font-size: 1.5rem;
+    color: #ff4500; /* Màu đỏ cho biểu tượng đồng hồ */
+    margin-right: 10px;
+  }
+
+  .table-info span {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .btn-payment {
+    background-color: #a67c52; /* Màu nâu đậm cho nút */
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  .btn-payment:hover {
+    background-color: #8b5a2b; /* Màu nâu đậm hơn khi hover */
+    transform: translateY(-2px);
+  }
+
+  .alert-info {
+    background-color: #d2b48c;
+    border-radius: 10px;
+    padding: 20px;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .alert-info::before {
+    content: "📭 ";
+    font-size: 1.5rem;
+    vertical-align: middle;
+  }
+
+  /* Responsive: Nếu màn hình nhỏ, chuyển thành 1 hoặc 2 cột */
+  @media (max-width: 992px) {
+    .list-group {
+      grid-template-columns: repeat(2, 1fr); /* 2 cột */
+    }
+  }
+
+  @media (max-width: 576px) {
+    .list-group {
+      grid-template-columns: 1fr; /* 1 cột */
+    }
+  }
+</style>
+
+<div class="container mt-4">
+  <h3 class="text-center mb-4">🧾 Thanh toán</h3>
+
+  <% if (tableNumbers.length > 0) { %>
+    <ul class="list-group">
+      <% tableNumbers.forEach(table => { %>
+        <li class="list-group-item">
+          <div class="table-info">
+            <span class="clock-icon">⏰</span>
+            <span>🪑 Bàn số <strong><%= table %></strong></span>
+          </div>
+          <a href="/payment/<%= table %>" class="btn-payment">Thanh toán</a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <div class="alert alert-info text-center mt-4 fs-5">
+      Hiện chưa có bàn nào cần thanh toán.
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

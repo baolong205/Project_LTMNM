@@ -1,38 +1,65 @@
 const MenuItem = require('../models/MenuItem');
+const Order = require('../models/order');
 
-// Thêm sản phẩm vào giỏ hàng
+// Thêm sản phẩm vào giỏ hàng và lưu vào MongoDB
 exports.addToCart = async (req, res) => {
-  const { itemId, quantity } = req.body;
+  const { itemId, quantity, tableNumber } = req.body;
 
   try {
+    // Kiểm tra tableNumber
+    if (!tableNumber) {
+      return res.status(400).send('Vui lòng chọn số bàn');
+    }
+
     // Tìm sản phẩm theo ID
     const product = await MenuItem.findById(itemId);
-
     if (!product) {
       return res.status(404).send('Sản phẩm không tồn tại');
     }
 
-    // Lấy giỏ hàng từ session
-    const cart = req.session.cart || [];
-    const existingItem = cart.find(item => item._id === itemId);
+    // Tìm hoặc tạo đơn hàng trong MongoDB
+    let order = await Order.findOne({ tableNumber, isPaid: false });
+
+    if (!order) {
+      order = new Order({
+        tableNumber,
+        items: [],
+        isPaid: false
+      });
+    }
+
+    // Kiểm tra xem sản phẩm đã có trong đơn hàng chưa
+    const existingItem = order.items.find(item => item.menuItem.toString() === itemId);
 
     if (existingItem) {
-      // Nếu sản phẩm đã tồn tại trong giỏ hàng, tăng số lượng
       existingItem.quantity += parseInt(quantity, 10);
     } else {
-      // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
-      cart.push({
+      order.items.push({
+        menuItem: product._id,
+        quantity: parseInt(quantity, 10),
+        status: 'pending'
+      });
+    }
+
+    // Lưu đơn hàng vào MongoDB
+    await order.save();
+
+    // Đồng bộ giỏ hàng trong session (tùy chọn)
+    let cart = req.session.cart || { tableNumber, items: [] };
+    const cartItem = cart.items.find(item => item._id === itemId);
+
+    if (cartItem) {
+      cartItem.quantity += parseInt(quantity, 10);
+    } else {
+      cart.items.push({
         _id: product._id,
         name: product.name,
         price: product.price,
         quantity: parseInt(quantity, 10),
       });
     }
-
-    // Lưu giỏ hàng vào session
     req.session.cart = cart;
 
-    // Chuyển hướng về trang menu hoặc giỏ hàng
     res.redirect('/menu');
   } catch (err) {
     console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', err);
@@ -41,70 +68,64 @@ exports.addToCart = async (req, res) => {
 };
 
 // Hiển thị giỏ hàng
-exports.viewCart = (req, res) => {
-  const cart = req.session.cart || [];
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+exports.viewCart = async (req, res) => {
+  const tableNumber = req.query.tableNumber || req.session.cart?.tableNumber || '';
 
-  res.render('order/cart', { cart, total });
-};
-
-// Xử lý thanh toán
-exports.checkout = (req, res) => {
-  const cart = req.session.cart || [];
-
-  if (cart.length === 0) {
-    return res.status(400).send('Giỏ hàng trống');
+  if (!tableNumber) {
+    return res.render('order/order', { cart: [], tableNumber: '', total: 0 });
   }
 
-  // Xử lý logic thanh toán ở đây (ví dụ: lưu vào cơ sở dữ liệu)
-  req.session.cart = []; // Xóa giỏ hàng sau khi thanh toán
-  res.send('Đơn hàng của bạn đã được gửi thành công!');
-
-};
-const getPendingItems = async (req, res) => {
   try {
-    const orders = await Order.find({ "items.status": "pending" })
-      .populate("items.menuId");
+    const order = await Order.findOne({ tableNumber, isPaid: false }).populate('items.menuItem');
 
-    const pendingItems = [];
+    if (!order || order.items.length === 0) {
+      return res.render('order/order', { cart: [], tableNumber, total: 0 });
+    }
 
-    orders.forEach(order => {
-      order.items.forEach(item => {
-        if (item.status === "pending") {
-          pendingItems.push({
-            orderId: order._id,
-            table: order.table,
-            menuName: item.menuId.name,
-            quantity: item.quantity,
-            itemId: item._id // cần để cập nhật trạng thái
-          });
-        }
-      });
-    });
+    const cart = order.items.map(item => ({
+      _id: item.menuItem._id,
+      name: item.menuItem.name,
+      price: item.menuItem.price,
+      quantity: item.quantity
+    }));
 
-    res.render('bartender/bartender', { pendingItems });
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    res.render('order/order', { cart, tableNumber, total });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Lỗi server");
+    console.error('Lỗi khi hiển thị giỏ hàng:', err);
+    res.status(500).send('Đã có lỗi xảy ra');
   }
 };
 
-const markItemDone = async (req, res) => {
-  const itemId = req.params.itemId;
+// Xử lý thanh toán và xóa đơn hàng
+exports.checkout = async (req, res) => {
+  const tableNumber = req.session.cart?.tableNumber || req.query.tableNumber;
+
+  if (!tableNumber) {
+    return res.status(400).send('Chưa chọn bàn để thanh toán');
+  }
 
   try {
-    await Order.updateOne(
-      { "items._id": itemId },
-      { $set: { "items.$.status": "done" } }
-    );
-    res.redirect('/bartender');
+    // Xóa đơn hàng khỏi MongoDB
+    const result = await Order.deleteOne({ tableNumber, isPaid: false });
+
+    if (result.deletedCount === 0) {
+      return res.status(400).send('Không tìm thấy đơn hàng để thanh toán');
+    }
+
+    // Xóa giỏ hàng trong session
+    req.session.cart = null;
+
+    res.redirect('/payment/list');
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Lỗi cập nhật trạng thái món");
+    console.error('Lỗi khi xử lý thanh toán:', err);
+    res.status(500).send('Đã có lỗi xảy ra');
   }
 };
 
 module.exports = {
-  getPendingItems,
-  markItemDone
+  addToCart,
+  viewCart,
+  checkout
 };
