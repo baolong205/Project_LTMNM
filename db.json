@@ -296,6 +296,27 @@
       "price": 40000,
       "image": "https://cdn.loveandlemons.com/wp-content/uploads/2023/06/iced-matcha-latte.jpg",
       "type": "nước"
+    },
+    {
+      "id": 29,
+      "code": "TS04",
+      "name": "Trà sữa matcha",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://file.hstatic.net/1000075078/file/2_1024x1024.jpg",
+      "type": "trà"
+    },{
+      "id": 30,
+      "code": "TS06",
+      "name": "Trà sữa khoai môn",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 33000,
+      "image": "https://viettuantea.vn/wp-content/uploads/2020/11/cong-thuc-pha-tra-sua-khoai-mon.jpg",
+      "type": "trà"
     }
   ],
   "users": [
