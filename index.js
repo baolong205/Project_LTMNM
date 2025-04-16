@@ -19,6 +19,8 @@ const homeRoutes = require('./routes/home');
 const paymentRoutes = require('./routes/payment');
 const dashboardRoutes = require('./routes/dashboard');
 const bartenderRoutes = require('./routes/bartender');
+const inventoryRoutes = require('./routes/inventory'); 
+
 
 // Cấu hình session và flash
 app.use(session({
@@ -59,6 +61,8 @@ app.use('/payment', paymentRoutes);
 app.use('/admin', adminRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/bartender', bartenderRoutes);
+app.use('/inventory', inventoryRoutes);
+
 
 
 // Trang 404

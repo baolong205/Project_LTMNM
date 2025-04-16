@@ -127,13 +127,14 @@ router.get('/:tableNumber', async (req, res) => {
 });
 
 // Hoàn tất đơn hàng
+// Trong hàm hoàn tất đơn hàng
 router.post('/submit/:tableNumber', async (req, res) => {
   try {
     const order = await Order.findOne({ tableNumber: req.params.tableNumber });
     if (!order) {
       return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng!" });
     }
-    order.status = 'completed';
+    order.status = 'pending'; // Đặt status là "pending" để trang bartender có thể tìm thấy
     await order.save();
     res.json({ success: true, message: "Đặt món thành công!" });
   } catch (err) {

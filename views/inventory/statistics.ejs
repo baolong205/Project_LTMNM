@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Thống kê tồn kho</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #e6d2b5;
+    }
+    header {
+      background-color: #5d2906;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-title {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .page-title {
+      padding: 1rem;
+      background-color: #e6d2b5;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .summary-box {
+      background-color: #d1b795;
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .summary-box h3 {
+      margin-top: 0;
+    }
+    
+    .summary-value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .inventory-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .inventory-table th {
+      background-color: #d1b795;
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid #d1b795;
+    }
+    
+    .inventory-table td {
+      padding: 0.75rem;
+      border: 1px solid #d1b795;
+      background-color: #e2d3bc;
+    }
+    
+    .inventory-table tr:nth-child(even) td {
+      background-color: #ead9c4;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #5d2906;
+      color: white;
+      display: inline-block;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+    
+    footer {
+      padding: 1rem;
+      text-align: center;
+      background-color: #e6d2b5;
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-left">
+    <i class="fas fa-bars"></i>
+    <div class="nav-title">
+      <i class="fas fa-warehouse"></i> Quản lý Kho
+    </div>
+  </div>
+  <div class="nav-right">
+    <i class="fas fa-wifi"></i>
+    <i class="fas fa-question-circle"></i>
+    <i class="fas fa-power-off"></i>
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %></div>
+  </div>
+</header>
+
+<div class="page-title">
+  <h3>Thống kê tồn kho</h3>
+</div>
+
+<div class="container">
+  <div class="summary-box">
+    <h3>Tổng giá trị tồn kho</h3>
+    <div class="summary-value"><%= totalValue.toLocaleString('vi-VN') %> VND</div>
+  </div>
+  
+  <a href="/inventory" class="btn"><i class="fas fa-arrow-left"></i> Quay lại</a>
+  
+  <table class="inventory-table">
+    <thead>
+      <tr>
+        <th>Tên nguyên liệu</th>
+        <th>Số lượng</th>
+        <th>Đơn vị</th>
+        <th>Giá nhập</th>
+        <th>Giá trị</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (items && items.length > 0) { %>
+        <% items.forEach(item => { %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.quantity %></td>
+            <td><%= item.unit || 'Đơn vị' %></td>
+            <td><%= item.price ? item.price.toLocaleString('vi-VN') : 0 %> VND</td>
+            <td><%= (item.quantity * item.price).toLocaleString('vi-VN') %> VND</td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" style="text-align: center;">Không có dữ liệu</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  <div>© 2023 Quán Cafe - All Rights Reserved</div>
+</footer>
+
+</body>
+</html>
