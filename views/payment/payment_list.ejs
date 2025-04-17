@@ -1,140 +1,244 @@
 <%- include('../partials/header') %>
 
 <style>
-  body {
-    background-color: #f5deb3; /* Màu nền nâu nhạt giống trong hình */
-    font-family: Arial, sans-serif;
-  }
+/* Đảm bảo body sử dụng flexbox để đẩy footer xuống dưới */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Roboto', sans-serif; /* Đồng bộ font chữ */
+}
 
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f1e9; /* Tông màu nền nhẹ nhàng */
+}
 
-  h3 {
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.8rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  }
+/* Nội dung chính */
+.payment-list-container {
+  flex: 1 0 auto; /* Đẩy footer xuống dưới */
+  padding: 20px; /* Giảm padding để tiết kiệm không gian */
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 150px); /* Giảm chiều cao tối thiểu để cân đối */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Căn nội dung lên trên */
+  align-items: center; /* Căn giữa theo chiều ngang */
+}
 
-  .list-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 cột đều nhau */
-    gap: 20px; /* Khoảng cách giữa các thẻ */
-    justify-items: center;
-  }
+/* Footer */
+footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 10px; /* Giảm padding để footer gọn hơn */
+  background-color: #f8f9fa;
+  font-size: 13px; /* Giảm font-size */
+  color: #666;
+}
 
-  .list-group-item {
-    background-color: #d2b48c; /* Màu nâu nhạt cho thẻ */
-    border-radius: 15px;
-    width: 100%; /* Chiếm toàn bộ chiều rộng cột */
-    max-width: 300px; /* Giới hạn chiều rộng thẻ */
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: none;
-  }
+/* Header section */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  width: 100%;
+  margin-bottom: 15px; /* Giảm margin-bottom */
+  padding: 10px 0;
+  border-bottom: 1px solid #e6d9c6; /* Thêm đường viền nhẹ để phân cách */
+}
 
-  .list-group-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  }
+.header-section h2 {
+  font-size: 22px; /* Giảm font-size để gọn hơn */
+  font-weight: 600;
+  color: #4a2c2a; /* Đồng bộ với màu header */
+  display: flex;
+  align-items: center;
+  margin: 0; /* Bỏ margin mặc định */
+}
 
-  .table-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
+.header-section h2 i {
+  margin-right: 8px;
+  font-size: 20px;
+}
 
-  .table-info .clock-icon {
-    font-size: 1.5rem;
-    color: #ff4500; /* Màu đỏ cho biểu tượng đồng hồ */
-    margin-right: 10px;
-  }
+/* Style cho đường link "Xem lịch sử thanh toán" */
+.header-section .history-link {
+  font-size: 15px; /* Giảm font-size */
+  font-weight: 500;
+  color: #007bff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
 
-  .table-info span {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
+.header-section .history-link:hover {
+  color: #0056b3;
+  transform: translateY(-2px); /* Hiệu ứng hover nhẹ */
+}
 
-  .btn-payment {
-    background-color: #a67c52; /* Màu nâu đậm cho nút */
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    text-decoration: none;
-  }
+.header-section .history-link i {
+  margin-right: 6px;
+  font-size: 14px;
+}
 
-  .btn-payment:hover {
-    background-color: #8b5a2b; /* Màu nâu đậm hơn khi hover */
-    transform: translateY(-2px);
-  }
+/* Tiêu đề "Bàn cần thanh toán" */
+.tables-grid h3 {
+  font-size: 18px; /* Giảm font-size */
+  font-weight: 500;
+  color: #333;
+  margin: 15px 0; /* Giảm margin */
+  text-align: center;
+}
 
-  .alert-info {
-    background-color: #d2b48c;
-    border-radius: 10px;
-    padding: 20px;
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 500;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
+/* Card thông báo khi không có bàn */
+.no-tables-card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px; /* Giảm padding */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng đổ */
+  text-align: center;
+  max-width: 350px; /* Thu nhỏ card */
+  width: 100%;
+  border: 1px solid #e6d9c6;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-  .alert-info::before {
-    content: "📭 ";
-    font-size: 1.5rem;
-    vertical-align: middle;
-  }
+.no-tables-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
 
-  /* Responsive: Nếu màn hình nhỏ, chuyển thành 1 hoặc 2 cột */
-  @media (max-width: 992px) {
-    .list-group {
-      grid-template-columns: repeat(2, 1fr); /* 2 cột */
-    }
-  }
+.no-tables-card p {
+  font-size: 15px; /* Giảm font-size */
+  color: #666;
+  margin-bottom: 15px; /* Giảm margin */
+}
 
-  @media (max-width: 576px) {
-    .list-group {
-      grid-template-columns: 1fr; /* 1 cột */
-    }
-  }
+/* Nút "Làm mới" */
+.btn-refresh {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 18px; /* Giảm padding */
+  border-radius: 6px; /* Giảm border-radius */
+  font-size: 13px; /* Giảm font-size */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-refresh:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-refresh i {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+/* Style cho danh sách bàn (khi có dữ liệu) */
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Thu nhỏ kích thước card */
+  gap: 15px; /* Giảm khoảng cách giữa các card */
+  width: 100%;
+}
+
+.table-card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px; /* Giảm padding */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.table-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.table-card .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Giảm margin */
+}
+
+.table-card h4 {
+  font-size: 16px; /* Giảm font-size */
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.table-card .status {
+  font-size: 13px; /* Giảm font-size */
+  color: #ff9800;
+}
+
+.btn-pay {
+  width: 100%;
+  padding: 10px; /* Giảm padding */
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px; /* Giảm border-radius */
+  font-size: 13px; /* Giảm font-size */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-pay:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-pay i {
+  margin-right: 5px;
+  font-size: 12px;
+}
 </style>
 
-<div class="container mt-4">
-  <h3 class="text-center mb-4">🧾 Thanh toán</h3>
+<div class="payment-list-container">
+  <div class="header-section">
+    <h2>
+      <i class="fas fa-cash-register"></i>
+      Quản lý thanh toán
+    </h2>
+    <a href="/history" class="history-link">
+      <i class="fas fa-history"></i> Xem lịch sử thanh toán
+    </a>
+  </div>
 
-  <% if (tableNumbers.length > 0) { %>
-    <ul class="list-group">
+  <!-- Danh sách bàn cần thanh toán -->
+  <div class="tables-grid">
+    <h3>Bàn cần thanh toán</h3>
+    <% if (tableNumbers && tableNumbers.length > 0) { %>
       <% tableNumbers.forEach(table => { %>
-        <li class="list-group-item">
-          <div class="table-info">
-            <span class="clock-icon">⏰</span>
-            <span>🪑 Bàn số <strong><%= table %></strong></span>
+        <div class="table-card">
+          <div class="table-header">
+            <h4>Bàn <%= table %></h4>
+            <span class="status">Đang chờ</span>
           </div>
-          <a href="/payment/<%= table %>" class="btn-payment">Thanh toán</a>
-        </li>
+          <a href="/payment/<%= table %>" class="btn btn-pay">
+            <i class="fas fa-receipt"></i>
+            Xem chi tiết & Thanh toán
+          </a>
+        </div>
       <% }) %>
-    </ul>
-  <% } else { %>
-    <div class="alert alert-info text-center mt-4 fs-5">
-      Hiện chưa có bàn nào cần thanh toán.
-    </div>
-  <% } %>
+    <% } else { %>
+      <div class="no-tables-card">
+        <p>Chưa có bàn nào cần thanh toán</p>
+        <button class="btn-refresh" onclick="window.location.reload()">
+          <i class="fas fa-sync-alt"></i> Làm mới
+        </button>
+      </div>
+    <% } %>
+  </div>
 </div>
 
 <%- include('../partials/footer') %>
