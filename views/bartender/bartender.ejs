@@ -304,6 +304,15 @@
       opacity: 0.5;
     }
     
+      /* Đổi màu biểu tượng power-off thành trắng */
+    .nav-right a i.fas.fa-power-off {
+      color: white;
+    }
+    
+    /* Thêm hiệu ứng hover nếu muốn */
+    .nav-right a:hover i.fas.fa-power-off {
+      color: #e6d2b5; /* Màu sáng hơn khi hover */
+    }
     /* CSS cho responsive */
     @media (max-width: 768px) {
       main {
@@ -330,12 +339,12 @@
     </a>
   </div>
   <div class="nav-right">
-    <a href="auth/login" class="">
+    <span class="user-role" style="color: white; margin-right: 10px; font-size: 0.9rem;">
+      <i class="fas fa-user-tag" style="margin-right: 5px;"></i>Bartender
+    </span>
+    <a href="auth/login" class="" title="Đăng xuất">
       <i class="fas fa-power-off"></i>
     </a>
-    <i class="fas fa-wifi"></i>
-    <i class="fas fa-question-circle"></i>
-    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' ? user.name : 'Nhân viên pha chế' %></div>
   </div>
   
 </header>
