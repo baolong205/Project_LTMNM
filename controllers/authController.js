@@ -1,31 +1,33 @@
-const express = require('express');
-const router = express.Router();
+const fs = require('fs').promises;
+const path = require('path');
+const dbPath = path.join(__dirname, '../db.json');
 
+// Load DB từ file JSON
+async function loadDB() {
+    const data = await fs.readFile(dbPath, 'utf-8');
+    return JSON.parse(data);
+}
 
+exports.postLogin = async (req, res) => {
+    const { username, password, role } = req.body; // role gửi từ form (ví dụ: thu ngân, phục vụ, pha chế)
+    const db = await loadDB();
 
-// Xử lý đăng nhập
-router.post('/login', (req, res) => {
-    const { username, password, role } = req.body;
+    const user = db.users.find(u => u.username === username && u.password === password);
 
-    // Tìm người dùng trong danh sách
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        // Lưu thông tin người dùng vào session
-        req.session.user = {
-            username: user.username,
-            role: user.role
-        };
-
-        // Nếu là staff, thêm quyền vào session
-        if (user.role === 'staff' && role) {
-            req.session.user.staffRole = role; // Lưu vai trò cụ thể: thu_ngan, pha_che, phuc_vu
-        }
-
-        res.redirect('/menu');
-    } else {
-        res.render('auth/login', { error: 'Sai tên đăng nhập hoặc mật khẩu!' });
+    if (!user) {
+        return res.render('auth/login', { error: 'Sai tên đăng nhập hoặc mật khẩu' });
     }
-});
 
-module.exports = router;
+    req.session.user = {
+        username: user.username,
+        role: user.role,
+        staffRole: user.staffRole || role || null // nếu chưa có trong db thì lấy từ form
+    };
+
+    // Điều hướng theo vai trò
+    if (user.role === 'admin') {
+        return res.redirect('/admin/dashboard');
+    } else {
+        return res.redirect('/menu');
+    }
+};

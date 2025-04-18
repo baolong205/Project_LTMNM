@@ -49,6 +49,8 @@ app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use('/', require('./routes/admin')); 
+
 // ✅ Public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -88,3 +90,19 @@ function startServer(port) {
 }
 
 startServer(PORT);
+// Route tạm để login thử với quyền admin
+app.get('/login-admin', (req, res) => {
+    req.session.user = {
+      username: 'admin',
+      role: 'admin'
+    };
+    res.redirect('/dashboard');
+  });
+
+  app.get('/login-admin', (req, res) => {
+    req.session.user = {
+      name: "Cao Cường",
+      role: "admin" // ✅ Quan trọng: đây chính là thông tin để hiển thị vai trò
+    };
+    res.redirect('/');
+  });
