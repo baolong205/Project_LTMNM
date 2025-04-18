@@ -14,13 +14,13 @@ router.get('/menu/:tableNumber', async (req, res) => {
     const menuItems = db.menuItems || [];
 
     if (menuItems.length === 0) {
-      return res.status(404).json({ error: "Không có món nào trong menu." });
+      return res.status(404).json({ error: 'Không có món nào trong menu.' });
     }
 
     res.json(menuItems);
   } catch (err) {
-    console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
-    res.status(500).json({ error: "Lỗi máy chủ!" });
+    console.error('❌ Lỗi khi đọc dữ liệu menu:', err.message, err.stack);
+    res.status(500).json({ error: 'Lỗi máy chủ!' });
   }
 });
 
@@ -40,8 +40,8 @@ router.get('/menu/type/:type', async (req, res) => {
 
     res.json(filteredItems);
   } catch (err) {
-    console.error("❌ Lỗi khi đọc dữ liệu menu:", err);
-    res.status(500).json({ error: "Lỗi máy chủ!" });
+    console.error('❌ Lỗi khi đọc dữ liệu menu:', err.message, err.stack);
+    res.status(500).json({ error: 'Lỗi máy chủ!' });
   }
 });
 
@@ -67,14 +67,14 @@ router.post('/add', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Món không tồn tại.' });
     }
 
-    let order = await Order.findOne({ tableNumber });
+    let order = await Order.findOne({ tableNumber, status: 'draft' });
     if (!order) {
       order = new Order({
         tableNumber,
         items: [],
         total: 0,
         createdAt: new Date(),
-        status: 'pending'
+        status: 'draft'
       });
     }
 
@@ -89,7 +89,8 @@ router.post('/add', async (req, res) => {
         name: item.name,
         price: item.price,
         quantity: parsedQuantity,
-        image: item.image || ''
+        image: item.image || '',
+        status: 'pending' // Thêm trạng thái pending cho mỗi item
       });
     }
 
@@ -97,8 +98,8 @@ router.post('/add', async (req, res) => {
 
     await order.save();
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: `Đã thêm ${quantity} ${item.name} vào giỏ hàng bàn ${tableNumber}!`,
       order: {
         tableNumber,
@@ -107,39 +108,58 @@ router.post('/add', async (req, res) => {
       }
     });
   } catch (err) {
-    console.error("❌ Lỗi khi thêm món vào giỏ hàng:", err);
-    res.status(500).json({ success: false, error: "Lỗi máy chủ!" });
+    console.error('❌ Lỗi khi thêm món vào giỏ hàng:', err.message, err.stack);
+    res.status(500).json({ success: false, error: 'Lỗi máy chủ!' });
   }
 });
 
 // Lấy đơn hàng theo bàn
 router.get('/:tableNumber', async (req, res) => {
   try {
-    const order = await Order.findOne({ tableNumber: req.params.tableNumber });
+    const order = await Order.findOne({ tableNumber: req.params.tableNumber, status: 'draft' });
     if (!order) {
       return res.status(404).json({ items: [], total: 0 });
     }
     res.json(order);
   } catch (err) {
-    console.error("❌ Lỗi khi lấy đơn hàng:", err);
-    res.status(500).json({ error: "Lỗi máy chủ!" });
+    console.error('❌ Lỗi khi lấy đơn hàng:', err.message, err.stack);
+    res.status(500).json({ error: 'Lỗi máy chủ!' });
   }
 });
 
 // Hoàn tất đơn hàng
-// Trong hàm hoàn tất đơn hàng
 router.post('/submit/:tableNumber', async (req, res) => {
   try {
-    const order = await Order.findOne({ tableNumber: req.params.tableNumber });
+    const order = await Order.findOne({ tableNumber: req.params.tableNumber, status: 'draft' });
     if (!order) {
-      return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng!" });
+      return res.status(404).json({ success: false, error: 'Không tìm thấy đơn hàng!' });
     }
-    order.status = 'pending'; // Đặt status là "pending" để trang bartender có thể tìm thấy
+    order.status = 'pending';
     await order.save();
-    res.json({ success: true, message: "Đặt món thành công!" });
+
+    // Tùy chọn: Reset đơn hàng nếu cần (bỏ comment nếu muốn bàn rỗng sau submit)
+    /*
+    order.items = [];
+    order.total = 0;
+    order.status = 'draft';
+    await order.save();
+    */
+
+    res.json({ success: true, message: 'Đặt món thành công!' });
   } catch (err) {
-    console.error("❌ Lỗi khi hoàn tất đơn hàng:", err);
-    res.status(500).json({ success: false, error: "Lỗi máy chủ!" });
+    console.error('❌ Lỗi khi hoàn tất đơn hàng:', err.message, err.stack);
+    res.status(500).json({ success: false, error: 'Lỗi máy chủ!' });
+  }
+});
+
+// Lấy danh sách đơn hàng pending cho bartender
+router.get('/pending-orders', async (req, res) => {
+  try {
+    const orders = await Order.find({ status: 'pending' });
+    res.json(orders);
+  } catch (err) {
+    console.error('❌ Lỗi khi lấy danh sách đơn hàng pending:', err.message, err.stack);
+    res.status(500).json({ error: 'Lỗi máy chủ!' });
   }
 });
 
@@ -148,8 +168,8 @@ router.get('/', async (req, res) => {
     const orders = await Order.find({});
     res.render('order/order', { orders });
   } catch (err) {
-    console.error("❌ Lỗi khi tải trang order:", err);
-    res.status(500).send("Lỗi máy chủ!");
+    console.error('❌ Lỗi khi tải trang order:', err.message, err.stack);
+    res.status(500).send('Lỗi máy chủ!');
   }
 });
 
