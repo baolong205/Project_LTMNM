@@ -63,7 +63,7 @@
       <div class="user-info">
         <% if (session && session.user) { %>
           <span><%= session.user.username %> (<a href="/auth/logout" class="status">Đăng xuất</a>)</span>
-          <span>Vai trò: <%= session.user.staffRole || 'Khách' %></span>
+          <span>Vai trò: <%= session.user.staffRole || 'admin' %></span>
         <% } else { %>
           <span>Chưa đăng nhập</span>
         <% } %>

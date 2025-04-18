@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-5">
+  <h2 class="text-primary mb-4">Chỉnh sửa thông tin người dùng</h2>
+
+  <form action="/admin/users/update/<%= user.id %>" method="POST" class="card p-4">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" name="username" class="form-control" value="<%= user.username %>" required>
+      </div>
+
+      <div class="col-md-4">
+        <label for="role">Vai trò</label>
+        <select id="role" name="role" class="form-control" required>
+          <option disabled value="">-- Chọn vai trò --</option>
+          <option value="waiter" <%= editUser.role === 'waiter' ? 'selected' : '' %>>Phục vụ</option>
+          <option value="cashier" <%= editUser.role === 'cashier' ? 'selected' : '' %>>Thu ngân</option>
+          <option value="bartender" <%= editUser.role === 'bartender' ? 'selected' : '' %>>Pha chế</option>
+          <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>Admin</option>
+        </select>        
+      </div>
+
+      <div class="col-md-4">
+        <label for="password">Đổi mật khẩu (nếu muốn)</label>
+        <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới (nếu cần)">
+      </div>
+
+      <div class="col-12 text-end mt-3">
+        <button class="btn btn-success">Cập nhật</button>
+        <a href="/admin/users" class="btn btn-secondary">Huỷ</a>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,13 +1,7 @@
 // models/MenuItem.js
 const mongoose = require('mongoose');
 
-const MenuItemSchema = new mongoose.Schema({
-    category: String,
-    code: String,
-    name: String,
-    group: String,
-    unit: String,
-    price: Number
-});
+// Chỉ để tương thích và tránh mất dữ liệu, ta bỏ qua schema cụ thể
+const MenuSchema = new mongoose.Schema({}, { strict: false });
 
-module.exports = mongoose.model('MenuItem', MenuItemSchema);
+module.exports = mongoose.model('Menu', MenuSchema, 'menus');

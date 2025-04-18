@@ -8,36 +8,29 @@ const isAuthenticated = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.role === 'admin') {
-        return next();
-    }
-    res.redirect('/'); // Nếu không phải admin, chuyển về trang chủ
-};
-
-// Các middleware khác (nếu chưa định nghĩa, bạn có thể thêm logic tương tự)
-const isStaff = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.role === 'staff') {
+    if (req.session?.user?.role === 'Admin') {
         return next();
     }
     res.redirect('/');
 };
 
 const isCashier = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.role === 'cashier') {
+    if (req.session?.user?.role === 'Thu ngân') {
+        console.log('🧪 Kiểm tra quyền Cashier:', req.session?.user);
         return next();
     }
     res.redirect('/');
 };
 
 const isBartender = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.role === 'bartender') {
+    if (req.session?.user?.role === 'Pha chế') {
         return next();
     }
     res.redirect('/');
 };
 
 const isWaiter = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.role === 'waiter') {
+    if (req.session?.user?.role === 'Phục vụ') {
         return next();
     }
     res.redirect('/');
@@ -46,7 +39,6 @@ const isWaiter = (req, res, next) => {
 module.exports = {
     isAuthenticated,
     isAdmin,
-    isStaff,
     isCashier,
     isBartender,
     isWaiter

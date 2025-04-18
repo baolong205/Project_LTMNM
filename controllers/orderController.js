@@ -123,9 +123,25 @@ exports.checkout = async (req, res) => {
     res.status(500).send('Đã có lỗi xảy ra');
   }
 };
+// Hiển thị danh sách món ăn cho khách chọn (menu chính)
+exports.showMenu = async (req, res) => {
+  try {
+    const menuItems = await MenuItem.find(); // lấy toàn bộ từ MongoDB collection 'menus'
+    res.render('order/order', {
+      menuItems,
+      cart: [],
+      tableNumber: '',
+      total: 0
+    });
+  } catch (err) {
+    console.error('Lỗi khi tải menu:', err);
+    res.status(500).send('Lỗi khi hiển thị menu');
+  }
+};
 
 module.exports = {
   addToCart,
   viewCart,
-  checkout
+  checkout,
+  showMenu
 };
