@@ -260,6 +260,67 @@
       box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
     }
     
+    .corner-back-button {
+      position: fixed;
+      left: 15px;
+      top: 75px; /* Điều chỉnh vị trí dưới header */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: #5d2906;
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      border: 2px solid #e6d2b5;
+      z-index: 100;
+    }
+    
+    .corner-back-button:hover {
+      background-color: #7a3409;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .corner-back-button i {
+      font-size: 1.2em;
+    }
+    
+    /* Tooltip khi hover */
+    .corner-back-button-container {
+      position: relative;
+    }
+    
+    .corner-back-button-tooltip {
+      position: absolute;
+      left: 50px;
+      top: 10px;
+      background-color: #5d2906;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+    
+      /* Đổi màu biểu tượng power-off thành trắng */
+    .nav-right a i.fas.fa-power-off {
+      color: white;
+    }
+    
+    /* Thêm hiệu ứng hover nếu muốn */
+    .nav-right a:hover i.fas.fa-power-off {
+      color: #e6d2b5; /* Màu sáng hơn khi hover */
+    }
+    .corner-back-button-container:hover .corner-back-button-tooltip {
+      opacity: 1;
+    }
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .action-buttons {
@@ -298,24 +359,27 @@
     </div>
   </div>
   <div class="nav-right">
-    <i class="fas fa-wifi"></i>
-    <i class="fas fa-question-circle"></i>
     <a href="auth/login" class="">
       <i class="fas fa-power-off"></i>
     </a>
-    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %></div>
   </div>
 </header>
-
+<div class="corner-back-button-container">
+  <a href="/bartender" class="corner-back-button" aria-label="Quay lại danh sách món">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <div class="corner-back-button-tooltip">DS món chế biến</div>
+</div>
 <div class="page-title">
   <h3>Quản lý Kho Nguyên Liệu</h3>
 </div>
 
+<!-- Trong phần tab -->
 <div class="tabs">
-  <button class="tab active" id="tabThemNL">Quản lý nguyên liệu</button>
-  <button class="tab" id="tabNhapKho">Nhập kho</button>
-  <button class="tab" id="tabXuatKho">Xuất kho</button>
-  <button class="tab" id="tabThongKe">Thống kê tồn kho</button>
+  <button class="tab active" id="tabThemNL" onclick="activateTab('tabThemNL')">Quản lý nguyên liệu</button>
+  <button class="tab" id="tabNhapKho" onclick="window.location.href='/inventory/import'">Nhập kho</button>
+  <button class="tab" id="tabXuatKho" onclick="window.location.href='/inventory/export'">Xuất kho</button>
+  <button class="tab" id="tabThongKe" onclick="window.location.href='/inventory/statistics'">Thống kê tồn kho</button>
 </div>
 
 <div id="messageBox" class="message-box">

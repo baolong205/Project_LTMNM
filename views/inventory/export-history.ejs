@@ -1,0 +1,159 @@
+<!-- views/inventory/export-detail.ejs -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết phiếu xuất kho</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* CSS tương tự như các trang khác */
+    /* ... */
+    
+    .receipt-info {
+      background-color: #ecdcc2;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .receipt-info div {
+      margin-bottom: 10px;
+    }
+    
+    .receipt-label {
+      font-weight: bold;
+      color: #5d2906;
+      width: 150px;
+      display: inline-block;
+    }
+    
+    .receipt-value {
+      display: inline-block;
+    }
+    
+    .print-btn {
+      padding: 8px 15px;
+      background-color: #5d2906;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-left">
+    <div class="nav-title">
+      <i class="fas fa-warehouse"></i> Quản lý Kho
+    </div>
+  </div>
+  <div class="nav-right">
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' ? user.name : 'Nhân viên' %></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab" onclick="window.location.href='/inventory'">Quản lý nguyên liệu</button>
+  <button class="tab" onclick="window.location.href='/inventory/import'">Nhập kho</button>
+  <button class="tab" onclick="window.location.href='/inventory/export'">Xuất kho</button>
+  <button class="tab" onclick="window.location.href='/inventory/statistics'">Thống kê tồn kho</button>
+  <button class="tab" onclick="window.location.href='/inventory/export-history'">Lịch sử xuất kho</button>
+</div>
+
+<div class="container">
+  <h2 class="page-title">Chi tiết phiếu xuất kho</h2>
+  
+  <div class="receipt-info">
+    <div>
+      <span class="receipt-label">Mã phiếu:</span>
+      <span class="receipt-value"><%= receipt.exportCode %></span>
+    </div>
+    <div>
+      <span class="receipt-label">Ngày xuất:</span>
+      <span class="receipt-value"><%= new Date(receipt.exportDate).toLocaleDateString('vi-VN') %></span>
+    </div>
+    <div>
+      <span class="receipt-label">Người lập phiếu:</span>
+      <span class="receipt-value"><%= receipt.creator %></span>
+    </div>
+    <div>
+      <span class="receipt-label">Người nhận:</span>
+      <span class="receipt-value"><%= receipt.receiverPerson %></span>
+    </div>
+    <div>
+      <span class="receipt-label">Bộ phận:</span>
+      <span class="receipt-value"><%= receipt.department %></span>
+    </div>
+  </div>
+  
+  <h3>Chi tiết nguyên liệu</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Mã NVL</th>
+        <th>Tên NVL</th>
+        <th>Đơn vị tính</th>
+        <th>Số lượng</th>
+        <th>Đơn giá</th>
+        <th>Thành tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% receipt.items.forEach(function(item) { %>
+        <tr>
+          <td><%= item.code %></td>
+          <td><%= item.name %></td>
+          <td><%= item.unit %></td>
+          <td><%= item.quantity %></td>
+          <td><%= item.price.toLocaleString('vi-VN') %> VND</td>
+          <td><%= item.amount.toLocaleString('vi-VN') %> VND</td>
+        </tr>
+      <% }); %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" style="text-align: right; font-weight: bold;">Tổng cộng:</td>
+        <td style="font-weight: bold;"><%= receipt.totalAmount.toLocaleString('vi-VN') %> VND</td>
+      </tr>
+    </tfoot>
+  </table>
+  
+  <button class="print-btn" onclick="window.print()">
+    <i class="fas fa-print"></i> In phiếu
+  </button>
+  
+  <a href="/inventory/export-history" style="margin-left: 10px; text-decoration: none;">
+    <button class="print-btn" style="background-color: #777;">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+  </a>
+</div>
+
+<footer class="no-print">
+  <div>© 2023 Quán Cafe - All Rights Reserved</div>
+</footer>
+
+<style media="print">
+  .no-print, header, .tabs, footer, .print-btn {
+    display: none !important;
+  }
+  body {
+    background-color: white !important;
+  }
+  .container {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  @page {
+    margin: 1cm;
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xuất Kho</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #e6d2b5;
+      color: #333;
+    }
+    
+    header {
+      background-color: #5d2906;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .nav-title {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .tabs {
+      display: flex;
+      background-color: #f3e9d9;
+      border-bottom: 1px solid #d1b795;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      color: #5d2906;
+    }
+    
+    .tab.active {
+      background-color: #5d2906;
+      color: #fff;
+    }
+    
+    .export-modal {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: #f3e9d9;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .modal-header {
+      background-color: #5d2906;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #5d2906;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d1b795;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    .detail-header {
+      background-color: #5d2906;
+      color: white;
+      padding: 10px 15px;
+      margin-top: 20px;
+    }
+    
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0;
+    }
+    
+    .items-table th {
+      background-color: #5d2906;
+      color: white;
+      text-align: left;
+      padding: 10px;
+    }
+    
+    .items-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e6d2b5;
+    }
+    
+    .items-table tr:nth-child(even) {
+      background-color: #ecdcc2;
+    }
+    
+    .items-table input, .items-table select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #d1b795;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    
+    .total-row {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px;
+      background-color: #ecdcc2;
+      font-weight: bold;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .btn-add {
+      background-color: #5d2906;
+      color: white;
+    }
+    
+    .btn-remove {
+      background-color: #c25e5e;
+      color: white;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 15px 20px;
+      background-color: #ecdcc2;
+    }
+    
+    .btn-save {
+      background-color: #2e7d32;
+      color: white;
+    }
+    
+    .btn-cancel {
+      background-color: #c25e5e;
+      color: white;
+    }
+    
+    .btn-help {
+      background-color: #5d2906;
+      color: white;
+    }
+    
+    footer {
+      background-color: #5d2906;
+      color: #e6d2b5;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      font-size: 0.9rem;
+    }
+    
+    .error-message {
+      color: #c25e5e;
+      background-color: #f8d7da;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-left">
+    <div class="nav-title">
+      <i class="fas fa-warehouse"></i> Quản lý Kho
+    </div>
+  </div>
+  <div class="nav-right">
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' ? user.name : 'Nhân viên' %></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab" onclick="window.location.href='/inventory'">Quản lý nguyên liệu</button>
+  <button class="tab" onclick="window.location.href='/inventory/import'">Nhập kho</button>
+  <button class="tab active">Xuất kho</button>
+  <button class="tab" onclick="window.location.href='/inventory/statistics'">Thống kê tồn kho</button>
+</div>
+
+<div class="export-modal">
+  <div class="modal-header">
+    <h2 class="modal-title">Phiếu xuất kho</h2>
+    <button class="close-btn" onclick="window.location.href='/inventory'">&times;</button>
+  </div>
+  
+  <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+    <div class="error-message">
+      <%= errorMessage %>
+    </div>
+  <% } %>
+  
+  <form id="exportForm" action="/inventory/export" method="POST">
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="exportCode">Mã PX</label>
+          <input type="text" id="exportCode" name="exportCode" class="form-control" value="PX<%= Date.now().toString().slice(-6) %>" readonly>
+        </div>
+        <div class="form-group">
+          <label for="creator">Người lập phiếu</label>
+          <input type="text" id="creator" name="creator" class="form-control" value="<%= typeof user !== 'undefined' && user.name ? user.name : 'Nhân viên' %>" required>
+        </div>
+        <div class="form-group">
+          <label for="exportDate">Ngày lập phiếu</label>
+          <input type="date" id="exportDate" name="exportDate" class="form-control" value="<%= new Date().toISOString().split('T')[0] %>">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="receiverPerson">Người nhận</label>
+          <input type="text" id="receiverPerson" name="receiverPerson" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="department">Bộ phận</label>
+          <select id="department" name="department" class="form-control" required>
+            <option value="">-- Chọn bộ phận --</option>
+            <option value="Bar">Bar</option>
+            <option value="Bếp">Bếp</option>
+            <option value="Phục vụ">Phục vụ</option>
+            <option value="Quản lý">Quản lý</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="detail-header">
+        <strong>Chi tiết</strong>
+      </div>
+      
+      <table class="items-table" id="itemsTable">
+        <thead>
+          <tr>
+            <th>Mã NVL</th>
+            <th>Tên NVL</th>
+            <th>Đơn vị tính</th>
+            <th>Tồn kho</th>
+            <th>Số lượng xuất</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <!-- Dòng đầu tiên -->
+          <tr>
+            <td>
+              <select name="items[0][inventoryId]" required onchange="updateInventoryInfo(0, this.value)">
+                <option value="">-- Chọn nguyên liệu --</option>
+                <% inventories.forEach(function(item) { %>
+                  <option value="<%= item._id %>" 
+                          data-code="<%= item.code %>" 
+                          data-name="<%= item.name %>" 
+                          data-unit="<%= item.unit %>" 
+                          data-quantity="<%= item.quantity %>" 
+                          data-price="<%= item.price %>">
+                    <%= item.name %> (<%= item.quantity %> <%= item.unit %>)
+                  </option>
+                <% }); %>
+              </select>
+              <input type="hidden" name="items[0][code]" id="code_0">
+              <input type="hidden" name="items[0][name]" id="name_0">
+            </td>
+            <td id="name_display_0">--</td>
+            <td id="unit_display_0">--</td>
+            <td id="quantity_display_0">--</td>
+            <td><input type="number" name="items[0][quantity]" min="0.01" step="0.01" required oninput="validateQuantity(0); calculateTotal(0);"></td>
+            <td id="price_display_0">--</td>
+            <td id="total_display_0">--</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="total-row">
+        Tổng: <span id="grandTotal">0 VND</span>
+      </div>
+      
+      <div class="action-buttons">
+        <button type="button" class="btn btn-add" onclick="addRow()">
+          <i class="fas fa-plus"></i> Thêm dòng
+        </button>
+        <button type="button" class="btn btn-remove" onclick="removeRow()">
+          <i class="fas fa-minus"></i> Xóa dòng
+        </button>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-cancel" onclick="window.location.href='/inventory'">
+        <i class="fas fa-times"></i> Hủy bỏ
+      </button>
+      <button type="button" class="btn btn-help">
+        <i class="fas fa-question-circle"></i> Giúp
+      </button>
+      <button type="submit" class="btn btn-save">
+        <i class="fas fa-save"></i> Lưu
+      </button>
+    </div>
+  </form>
+</div>
+
+<footer>
+  <div>© 2023 Quán Cafe - All Rights Reserved</div>
+</footer>
+
+<script>
+  let rowIndex = 1;
+  let inventories = JSON.parse('<%- JSON.stringify(inventories) %>');
+  
+  // Hàm cập nhật thông tin nguyên liệu khi chọn từ dropdown
+  function updateInventoryInfo(index, inventoryId) {
+    if (!inventoryId) {
+      document.getElementById(`name_display_${index}`).textContent = '--';
+      document.getElementById(`unit_display_${index}`).textContent = '--';
+      document.getElementById(`quantity_display_${index}`).textContent = '--';
+      document.getElementById(`price_display_${index}`).textContent = '--';
+      document.getElementById(`total_display_${index}`).textContent = '--';
+      return;
+    }
+    
+    const select = document.querySelector(`select[name="items[${index}][inventoryId]"]`);
+    const option = select.options[select.selectedIndex];
+    
+    if (option) {
+      const code = option.dataset.code || '';
+      const name = option.dataset.name || '';
+      const unit = option.dataset.unit || '';
+      const quantity = option.dataset.quantity || 0;
+      const price = option.dataset.price || 0;
+      
+      // Hiển thị thông tin
+      document.getElementById(`name_display_${index}`).textContent = name;
+      document.getElementById(`unit_display_${index}`).textContent = unit;
+      document.getElementById(`quantity_display_${index}`).textContent = quantity;
+      document.getElementById(`price_display_${index}`).textContent = Number(price).toLocaleString('vi-VN') + ' VND';
+      
+      // Cập nhật giá trị ẩn
+      document.getElementById(`code_${index}`).value = code;
+      document.getElementById(`name_${index}`).value = name;
+      
+      // Reset số lượng xuất
+      const quantityInput = document.querySelector(`input[name="items[${index}][quantity]"]`);
+      if (quantityInput) {
+        quantityInput.value = '';
+        quantityInput.max = quantity;
+      }
+      
+      // Xóa tổng
+      document.getElementById(`total_display_${index}`).textContent = '--';
+      updateGrandTotal();
+    }
+  }
+  
+  // Kiểm tra số lượng xuất không vượt quá tồn kho
+  function validateQuantity(index) {
+    const select = document.querySelector(`select[name="items[${index}][inventoryId]"]`);
+    if (!select) return;
+    
+    const option = select.options[select.selectedIndex];
+    if (!option || !option.value) return;
+    
+    const availableQuantity = parseFloat(option.dataset.quantity) || 0;
+    const quantityInput = document.querySelector(`input[name="items[${index}][quantity]"]`);
+    if (!quantityInput) return;
+    
+    const exportQuantity = parseFloat(quantityInput.value) || 0;
+    
+    if (exportQuantity > availableQuantity) {
+      alert(`Số lượng xuất (${exportQuantity}) không thể lớn hơn số lượng tồn kho (${availableQuantity})!`);
+      quantityInput.value = availableQuantity;
+    }
+    
+    calculateTotal(index);
+  }
+  
+  // Tính tổng tiền cho một dòng
+  function calculateTotal(index) {
+    const select = document.querySelector(`select[name="items[${index}][inventoryId]"]`);
+    if (!select || !select.value) return;
+    
+    const option = select.options[select.selectedIndex];
+    const price = parseFloat(option.dataset.price) || 0;
+    
+    const quantityInput = document.querySelector(`input[name="items[${index}][quantity]"]`);
+    if (!quantityInput || !quantityInput.value) {
+      document.getElementById(`total_display_${index}`).textContent = '--';
+      updateGrandTotal();
+      return;
+    }
+    
+    const quantity = parseFloat(quantityInput.value) || 0;
+    const total = quantity * price;
+    
+    document.getElementById(`total_display_${index}`).textContent = total.toLocaleString('vi-VN') + ' VND';
+    
+    updateGrandTotal();
+  }
+  
+  // Cập nhật tổng tiền của toàn bộ phiếu
+  function updateGrandTotal() {
+    let grandTotal = 0;
+    const rows = document.getElementById('itemsBody').rows;
+    
+    for (let i = 0; i < rows.length; i++) {
+      const select = rows[i].querySelector('select[name$="[inventoryId]"]');
+      if (!select || !select.value) continue;
+      
+      const option = select.options[select.selectedIndex];
+      const price = parseFloat(option.dataset.price) || 0;
+      
+      const quantityInput = rows[i].querySelector('input[name$="[quantity]"]');
+      if (!quantityInput || !quantityInput.value) continue;
+      
+      const quantity = parseFloat(quantityInput.value) || 0;
+      grandTotal += quantity * price;
+    }
+    
+    document.getElementById('grandTotal').textContent = grandTotal.toLocaleString('vi-VN') + ' VND';
+  }
+  
+  // Thêm một dòng mới vào bảng
+  function addRow() {
+    const tbody = document.getElementById('itemsBody');
+    const newRow = document.createElement('tr');
+    
+    let inventoryOptions = '<option value="">-- Chọn nguyên liệu --</option>';
+    inventories.forEach(function(item) {
+      inventoryOptions += `<option value="${item._id}" 
+                                data-code="${item.code}" 
+                                data-name="${item.name}" 
+                                data-unit="${item.unit}" 
+                                data-quantity="${item.quantity}" 
+                                data-price="${item.price}">
+                          ${item.name} (${item.quantity} ${item.unit})
+                        </option>`;
+    });
+    
+    newRow.innerHTML = `
+      <td>
+        <select name="items[${rowIndex}][inventoryId]" required onchange="updateInventoryInfo(${rowIndex}, this.value)">
+          ${inventoryOptions}
+        </select>
+        <input type="hidden" name="items[${rowIndex}][code]" id="code_${rowIndex}">
+        <input type="hidden" name="items[${rowIndex}][name]" id="name_${rowIndex}">
+      </td>
+      <td id="name_display_${rowIndex}">--</td>
+      <td id="unit_display_${rowIndex}">--</td>
+      <td id="quantity_display_${rowIndex}">--</td>
+      <td><input type="number" name="items[${rowIndex}][quantity]" min="0.01" step="0.01" required oninput="validateQuantity(${rowIndex}); calculateTotal(${rowIndex});"></td>
+      <td id="price_display_${rowIndex}">--</td>
+      <td id="total_display_${rowIndex}">--</td>
+    `;
+    
+    tbody.appendChild(newRow);
+    rowIndex++;
+  }
+  
+  // Xóa dòng cuối cùng trong bảng
+  function removeRow() {
+    const tbody = document.getElementById('itemsBody');
+    if (tbody.rows.length > 1) {
+      tbody.deleteRow(tbody.rows.length - 1);
+      rowIndex = Math.max(1, rowIndex - 1);
+      updateGrandTotal();
+    } else {
+      alert('Phải có ít nhất một dòng nguyên liệu!');
+    }
+  }
+  
+  // Xác thực form trước khi gửi
+  document.getElementById('exportForm').addEventListener('submit', function(event) {
+    const rows = document.getElementById('itemsBody').rows;
+    let hasValidItems = false;
+    
+    for (let i = 0; i < rows.length; i++) {
+      const select = rows[i].querySelector('select[name$="[inventoryId]"]');
+      const quantityInput = rows[i].querySelector('input[name$="[quantity]"]');
+      
+      if (select && select.value && quantityInput && quantityInput.value) {
+        hasValidItems = true;
+        break;
+      }
+    }
+    
+    if (!hasValidItems) {
+      event.preventDefault();
+      alert('Vui lòng chọn ít nhất một nguyên liệu và nhập số lượng!');
+    }
+  });
+  
+  // Khởi tạo
+  document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('exportDate').value = today;
+  });
+</script>
+
+
+</body>
+</html>
