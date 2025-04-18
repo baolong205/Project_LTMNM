@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/order');
 const PaymentHistory = require('../models/paymentHistory');
-const QRCode = require('qrcode'); // Thêm thư viện qrcode
+const QRCode = require('qrcode');
 
 // Middleware kiểm tra quyền thu ngân
 function isCashier(req, res, next) {
@@ -16,14 +15,17 @@ function isCashier(req, res, next) {
 // Hiển thị danh sách các bàn cần thanh toán
 router.get('/', isCashier, async (req, res) => {
   try {
-    const orders = await Order.find({ status: 'completed' });
+    const paymentRecords = await PaymentHistory.find({ paymentMethod: 'pending' });
+    console.log('✅ Payment records found:', paymentRecords.length, paymentRecords.map(r => ({ tableNumber: r.tableNumber, items: r.items.length })));
+
     const tableNumbers = [
       ...new Set(
-        orders
-          .filter(order => order.items.length > 0)
-          .map(order => order.tableNumber)
+        paymentRecords
+          .filter(record => Array.isArray(record.items) && record.items.length > 0)
+          .map(record => record.tableNumber)
       )
     ];
+    console.log('✅ Table numbers for payment:', tableNumbers);
 
     res.render('payment/payment_list', {
       tableNumbers,
@@ -32,7 +34,7 @@ router.get('/', isCashier, async (req, res) => {
       session: req.session
     });
   } catch (error) {
-    console.error('❌ Lỗi khi lấy đơn hàng:', error);
+    console.error('❌ Lỗi khi lấy danh sách bàn:', error.message, error.stack);
     req.flash('error', 'Lỗi máy chủ khi tải danh sách bàn.');
     res.render('payment/payment_list', {
       tableNumbers: [],
@@ -48,24 +50,44 @@ router.get('/:tableNumber', isCashier, async (req, res) => {
   const { tableNumber } = req.params;
 
   try {
-    const order = await Order.findOne({ tableNumber, status: 'completed' });
+    // Lấy tất cả bản ghi pending cho bàn
+    const paymentRecords = await PaymentHistory.find({ tableNumber, paymentMethod: 'pending' });
+    console.log('✅ Payment records for table:', tableNumber, paymentRecords.length);
 
-    if (!order || !order.items || order.items.length === 0) {
-      req.flash('error', 'Không tìm thấy đơn hàng cho bàn này.');
+    if (!paymentRecords || paymentRecords.length === 0) {
+      console.warn('⚠ Không tìm thấy đơn hàng hợp lệ cho bàn:', tableNumber);
+      req.flash('error', 'Không tìm thấy đơn hàng hợp lệ cho bàn này.');
       return res.redirect('/payment');
     }
 
-    const cart = order.items.map(item => ({
-      name: item.name || 'Chưa có tên món',
-      price: typeof item.price === 'number' ? item.price : 0,
-      quantity: item.quantity || 1
-    }));
+    // Tổng hợp tất cả sản phẩm từ các bản ghi
+    const cart = [];
+    paymentRecords.forEach(record => {
+      if (Array.isArray(record.items) && record.items.length > 0) {
+        record.items.forEach(item => {
+          cart.push({
+            name: item.name || 'Chưa có tên món',
+            price: typeof item.price === 'number' ? item.price : 0,
+            quantity: typeof item.quantity === 'number' ? item.quantity : 1
+          });
+        });
+      }
+    });
 
+    if (cart.length === 0) {
+      console.warn('⚠ Không có sản phẩm hợp lệ trong đơn hàng của bàn:', tableNumber);
+      req.flash('error', 'Không có sản phẩm hợp lệ để thanh toán.');
+      return res.redirect('/payment');
+    }
+
+    // Tính tổng tiền
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+    // Lấy lịch sử thanh toán
     const paymentHistory = await PaymentHistory.find({ tableNumber })
       .sort({ createdAt: -1 })
       .lean();
+    console.log('✅ Payment history for table:', tableNumber, paymentHistory.length);
 
     res.render('payment/payment', {
       tableNumber,
@@ -77,7 +99,7 @@ router.get('/:tableNumber', isCashier, async (req, res) => {
       session: req.session
     });
   } catch (error) {
-    console.error('❌ Lỗi khi lấy đơn hàng:', error);
+    console.error('❌ Lỗi khi lấy đơn hàng cho thanh toán:', error.message, error.stack);
     req.flash('error', 'Lỗi máy chủ khi tải trang thanh toán.');
     res.redirect('/payment');
   }
@@ -95,18 +117,15 @@ router.post('/generate-qr/:tableNumber', isCashier, async (req, res) => {
 
     let qrData;
     if (paymentMethod === 'transfer') {
-      // Thông tin tài khoản ngân hàng
       qrData = `Bank: Vietcombank, Account: 1234567890, Amount: ${total} VND, Table: ${tableNumber}`;
     } else if (paymentMethod === 'ewallet') {
-      // URL thanh toán giả lập cho MoMo/ZaloPay
       qrData = `https://payment.example.com/pay?amount=${total}&table=${tableNumber}`;
     }
 
-    // Tạo mã QR dưới dạng base64
     const qrCode = await QRCode.toDataURL(qrData);
     res.json({ success: true, qrCode });
   } catch (error) {
-    console.error('❌ Lỗi khi tạo mã QR:', error);
+    console.error('❌ Lỗi khi tạo mã QR:', error.message, error.stack);
     res.status(500).json({ success: false, message: 'Lỗi khi tạo mã QR.' });
   }
 });
@@ -121,28 +140,38 @@ router.post('/confirm/:tableNumber', isCashier, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Phương thức thanh toán không hợp lệ.' });
     }
 
-    const order = await Order.findOne({ tableNumber, status: 'completed' });
-
-    if (!order || !order.items || order.items.length === 0) {
-      return res.status(400).json({ success: false, message: 'Giỏ hàng không tồn tại hoặc đã được thanh toán.' });
+    // Lấy tất cả bản ghi pending cho bàn
+    const paymentRecords = await PaymentHistory.find({ tableNumber, paymentMethod: 'pending' });
+    if (!paymentRecords || paymentRecords.length === 0) {
+      console.warn('⚠ Không tìm thấy đơn hàng hợp lệ để thanh toán:', tableNumber);
+      return res.status(400).json({ success: false, message: 'Không tìm thấy đơn hàng hợp lệ hoặc đã thanh toán.' });
     }
 
-    const total = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Kiểm tra dữ liệu sản phẩm
+    let hasValidItems = false;
+    for (const record of paymentRecords) {
+      if (Array.isArray(record.items) && record.items.length > 0) {
+        hasValidItems = true;
+        break;
+      }
+    }
+    if (!hasValidItems) {
+      console.warn('⚠ Không có sản phẩm hợp lệ trong đơn hàng của bàn:', tableNumber);
+      return res.status(400).json({ success: false, message: 'Không có sản phẩm hợp lệ để thanh toán.' });
+    }
 
-    await PaymentHistory.create({
-      tableNumber: order.tableNumber,
-      items: order.items,
-      total,
-      paymentMethod,
-      createdAt: new Date()
-    });
+    // Cập nhật tất cả bản ghi pending
+    for (const record of paymentRecords) {
+      record.paymentMethod = paymentMethod;
+      record.createdAt = new Date();
+      await record.save();
+      console.log('✅ Đã cập nhật thanh toán cho bản ghi:', record._id, paymentMethod);
+    }
 
-    await Order.deleteOne({ _id: order._id });
-
-    return res.json({ success: true, message: 'Thanh toán thành công!' });
+    res.json({ success: true, message: 'Thanh toán tất cả sản phẩm thành công!' });
   } catch (error) {
-    console.error('❌ Lỗi khi xác nhận thanh toán:', error);
-    return res.status(500).json({ success: false, message: 'Lỗi hệ thống. Vui lòng thử lại.' });
+    console.error('❌ Lỗi khi xác nhận thanh toán:', error.message, error.stack);
+    res.status(500).json({ success: false, message: 'Lỗi hệ thống. Vui lòng thử lại.' });
   }
 });
 

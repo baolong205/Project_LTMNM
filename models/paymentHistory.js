@@ -1,15 +1,20 @@
 const mongoose = require('mongoose');
 
-const PaymentHistorySchema = new mongoose.Schema({
+const paymentHistorySchema = new mongoose.Schema({
   tableNumber: { type: String, required: true },
-  items: [{
-    name: { type: String, required: true },
-    price: { type: Number, required: true, min: 0 },
-    quantity: { type: Number, required: true, min: 1 }
-  }],
-  total: { type: Number, required: true, min: 0 },
+  items: [
+    {
+      menuId: { type: String, required: true },
+      name: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true },
+      image: { type: String },
+      status: { type: String, enum: ['pending', 'completed'], default: 'completed' }
+    }
+  ],
+  total: { type: Number, required: true },
+  paymentMethod: { type: String, enum: ['pending', 'cash', 'transfer', 'card', 'ewallet'], required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
-// Export model đúng cách
-module.exports = mongoose.model('PaymentHistory', PaymentHistorySchema);
+module.exports = mongoose.model('PaymentHistory', paymentHistorySchema);

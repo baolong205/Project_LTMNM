@@ -90,7 +90,7 @@ router.post('/add', async (req, res) => {
         price: item.price,
         quantity: parsedQuantity,
         image: item.image || '',
-        status: 'pending' // Thêm trạng thái pending cho mỗi item
+        status: 'pending'
       });
     }
 
@@ -136,14 +136,6 @@ router.post('/submit/:tableNumber', async (req, res) => {
     }
     order.status = 'pending';
     await order.save();
-
-    // Tùy chọn: Reset đơn hàng nếu cần (bỏ comment nếu muốn bàn rỗng sau submit)
-    /*
-    order.items = [];
-    order.total = 0;
-    order.status = 'draft';
-    await order.save();
-    */
 
     res.json({ success: true, message: 'Đặt món thành công!' });
   } catch (err) {
