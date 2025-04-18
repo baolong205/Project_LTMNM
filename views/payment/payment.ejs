@@ -1,135 +1,324 @@
 <%- include('../partials/header') %>
 
-<!-- CSS trực tiếp trong file -->
 <style>
-    .main-body {
-        background-color: white;
-        border-radius: 5px;
-        padding: 20px;
-        margin-top: 20px;
-        font-family: Arial, sans-serif;
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    h3.text-center {
-        color: #333;
-        font-size: 24px;
-        margin-bottom: 20px;
-        text-align: left;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-    }
-    
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
-    
-    table th {
-        background-color: #f5f5f5;
-        text-align: left;
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
-        font-weight: normal;
-    }
-    
-    table td {
-        padding: 8px;
-        border-bottom: 1px solid #eee;
-    }
-    
-    h4.text-end {
-        font-size: 18px;
-        text-align: right;
-        margin-top: 20px;
-        padding-top: 10px;
-        border-top: 1px dashed #ccc;
-    }
-    
-    .btn-primary {
-        background-color: #333;
-        border: none;
-        padding: 10px;
-        margin-top: 20px;
-    }
-    
-    .btn-primary:hover {
-        background-color: #555;
-    }
+.payment-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    .btn-secondary {
-        background-color: #6c757d;
-        border: none;
-        padding: 10px;
-        margin-top: 10px;
-    }
-    
-    .btn-secondary:hover {
-        background-color: #5a6268;
-    }
-    
-    /* Style cho phần tổng thanh toán giống trong ảnh */
-    .total-section {
-        text-align: right;
-        margin-top: 20px;
-        font-weight: bold;
-        font-size: 18px;
-    }
-    
-    /* Thêm đường kẻ ngang như trong ảnh */
-    .divider {
-        border-top: 1px solid #eee;
-        margin: 15px 0;
-    }
+.order-details {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 
-    .button-group {
-        display: flex;
-        flex-direction: column;
-    }
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.time-badge {
+  background: #f8f3e9;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.order-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.item-note {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.payment-method {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+}
+
+.payment-method.selected {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-back {
+  background: #6c757d;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+.btn-confirm {
+  background: #28a745;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+.qr-modal img {
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+}
 </style>
 
-<!-- Bọc nội dung chính trong div để áp dụng CSS -->
-<div class="main-body container">
-    <% if (cart && Array.isArray(cart) && cart.length > 0) { %>
-        <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th>Tên món</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% cart.forEach((item) => { %>
-                    <tr>
-                        <td><%= item.name %></td>
-                        <td><%= item.quantity %></td>
-                        <td><%= (item.price * item.quantity).toLocaleString('vi-VN') %> VND</td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
+<div class="payment-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+      <i class="fas fa-cash-register"></i>
+      Quản lý thanh toán
+    </h2>
+  </div>
 
-        <div class="divider"></div>
+  <% if (successMessage) { %>
+    <div class="alert alert-success"><%= successMessage %></div>
+  <% } %>
+  <% if (errorMessage) { %>
+    <div class="alert alert-danger"><%= errorMessage %></div>
+  <% } %>
 
-        <div class="total-section">
-            <h4>Tổng thanh toán</h4>
-            <p><%= total > 0 ? total.toLocaleString('vi-VN') : 'N/A' %> VND</p>
+  <div class="order-details">
+    <div class="table-header">
+      <h3>Chi tiết đơn hàng - Bàn <%= tableNumber %></h3>
+      <span class="time-badge" id="time">Thời gian: <%= new Date().toLocaleTimeString('vi-VN') %></span>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Mặt hàng</th>
+          <th>Số lượng</th>
+          <th>Đơn giá</th>
+          <th>Thành tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cart.forEach(item => { %>
+        <tr class="order-item">
+          <td>
+            <%= item.name %>
+            <% if (item.note) { %>
+              <div class="item-note"><%= item.note %></div>
+            <% } %>
+          </td>
+          <td>
+            <div class="quantity-control">
+              <%= item.quantity %>
+            </div>
+          </td>
+          <td><%= item.price.toLocaleString('vi-VN') %> đ</td>
+          <td><%= (item.price * item.quantity).toLocaleString('vi-VN') %> đ</td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <div class="mt-4">
+      <div class="d-flex justify-content-between mb-2">
+        <span>Tổng tiền hàng:</span>
+        <span><%= total.toLocaleString('vi-VN') %> đ</span>
+      </div>
+
+      <div class="d-flex justify-content-between mb-4">
+        <strong>Tổng thanh toán:</strong>
+        <strong class="text-success"><%= total.toLocaleString('vi-VN') %> đ</strong>
+      </div>
+
+      <div>
+        <h5>Phương thức thanh toán</h5>
+        <div class="payment-methods">
+          <label class="payment-method selected">
+            <input type="radio" name="payment" value="cash" checked>
+            <span>Tiền mặt</span>
+            <div class="text-muted">Thanh toán trực tiếp tại quầy</div>
+          </label>
+          
+          <label class="payment-method">
+            <input type="radio" name="payment" value="transfer">
+            <span>Chuyển khoản</span>
+            <div class="text-muted">QR thanh toán tự động</div>
+          </label>
+
+          <label class="payment-method">
+            <input type="radio" name="payment" value="card">
+            <span>Thẻ ngân hàng</span>
+            <div class="text-muted">Quẹt thẻ tại quầy</div>
+          </label>
+
+          <label class="payment-method">
+            <input type="radio" name="payment" value="ewallet">
+            <span>MoMo / ZaloPay</span>
+            <div class="text-muted">Quét mã QR thanh toán</div>
+          </label>
         </div>
-
-        <div class="button-group">
-            <form action="/payment/confirm/<%= tableNumber %>" method="POST">
-                <button type="submit" class="btn btn-primary w-100">Xác nhận thanh toán</button>
-            </form>
-            <a href="http://localhost:3000/payment" class="btn btn-secondary w-100 mt-2">Trở lại</a>
+        <div class="action-buttons">
+          <button onclick="window.location.href='/payment'" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Trở lại
+          </button>
+          <form id="paymentForm">
+            <button type="submit" class="btn-confirm">
+              <i class="fas fa-check"></i> Hoàn tất thanh toán
+            </button>
+          </form>
         </div>
-    <% } else { %>
-        <div class="alert alert-warning text-center mt-4">❌ Giỏ hàng trống hoặc không hợp lệ.</div>
-        <a href="http://localhost:3000/payment" class="btn btn-secondary w-100 mt-2">Trở lại</a>
-    <% } %>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Modal Thanh toán thành công -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thanh toán thành công</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Thanh toán cho bàn <%= tableNumber %> đã hoàn tất!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/payment'">Quay lại danh sách bàn</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal hiển thị mã QR -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Quét mã QR để thanh toán</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body qr-modal">
+        <img id="qrCodeImage" src="" alt="QR Code">
+        <p class="text-center mt-3">Vui lòng quét mã QR để thanh toán.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" id="confirmAfterQR">Xác nhận thanh toán</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Cập nhật thời gian trực tiếp
+function updateTime() {
+  document.getElementById('time').textContent = 
+    `Thời gian: ${new Date().toLocaleTimeString('vi-VN')}`;
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// Chọn phương thức thanh toán
+document.querySelectorAll('.payment-method input').forEach(input => {
+  input.addEventListener('change', () => {
+    document.querySelectorAll('.payment-method').forEach(method => {
+      method.classList.remove('selected');
+    });
+    input.closest('.payment-method').classList.add('selected');
+  });
+});
+
+// Xử lý thanh toán qua AJAX
+document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+    // Không khai báo lại biến total, sử dụng trực tiếp giá trị từ EJS
+    const orderTotal = Number('<%= total %>'); // Chuyển thành số để đảm bảo hợp lệ
+
+    // Kiểm tra xem orderTotal có phải là sốstairs số hợp lệ hay không
+    if (isNaN(orderTotal)) {
+      throw new Error('Total không hợp lệ');
+    }
+
+    // Nếu là transfer hoặc ewallet, tạo mã QR trước
+    if (['transfer', 'ewallet'].includes(paymentMethod)) {
+      const qrResponse = await fetch(`/payment/generate-qr/<%= tableNumber %>`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentMethod, total: orderTotal })
+      });
+      const qrData = await qrResponse.json();
+
+      if (qrData.success) {
+        // Hiển thị mã QR trong modal
+        document.getElementById('qrCodeImage').src = qrData.qrCode;
+        const qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
+        qrModal.show();
+
+        // Xử lý xác nhận thanh toán sau khi hiển thị QR
+        document.getElementById('confirmAfterQR').onclick = async () => {
+          const response = await fetch(`/payment/confirm/<%= tableNumber %>`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paymentMethod })
+          });
+          const data = await response.json();
+          if (data.success) {
+            qrModal.hide();
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+          } else {
+            alert(data.message || 'Lỗi khi thanh toán. Vui lòng thử lại.');
+          }
+        };
+      } else {
+        alert(qrData.message || 'Lỗi khi tạo mã QR.');
+      }
+    } else {
+      // Thanh toán trực tiếp (cash, card)
+      const response = await fetch(`/payment/confirm/<%= tableNumber %>`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentMethod })
+      });
+      const data = await response.json();
+      if (data.success) {
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+      } else {
+        alert(data.message || 'Lỗi khi thanh toán. Vui lòng thử lại.');
+      }
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    alert('Lỗi hệ thống. Vui lòng thử lại.');
+  }
+});
+</script>
 
 <%- include('../partials/footer') %>
