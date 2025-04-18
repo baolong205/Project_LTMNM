@@ -303,41 +303,44 @@
           menuContainer.innerHTML = `<div class="col-12 text-danger text-center">❌ Không có món nào trong menu.</div>`;
           return;
         }
+      
         menuItems.forEach((item) => {
-          menuContainer.innerHTML += `
-            <div class="col-md-4 mb-4">
-              <div class="card menu-card">
-                <img src="${item.image || '/public/image/default.jpg'}" class="card-img-top" alt="${item.name}">
-                <div class="card-body">
-                  <h5 class="card-title">${item.name}</h5>
-                  <p class="card-text">${item.price.toLocaleString('vi-VN')} VND</p>
-                  <div class="d-flex justify-content-center">
-                    <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item.id}" style="width: 80px;">
-                  </div>
-                  <button class="btn btn-primary btn-sm mt-2 add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
-                    Thêm món
-                  </button>
+          const col = document.createElement("div");
+          col.className = "col-md-6 mb-4 menu-wrapper"; // dùng wrapper để dễ filter
+          col.innerHTML = `
+            <div class="card menu-card">
+              <img src="${item.image || '/public/image/default.jpg'}" class="card-img-top" alt="${item.name}">
+              <div class="card-body">
+                <h5 class="card-title">${item.name}</h5>
+                <p class="card-text">${item.price.toLocaleString('vi-VN')} VND</p>
+                <div class="d-flex justify-content-center">
+                  <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item.id}" style="width: 80px;">
                 </div>
+                <button class="btn btn-primary btn-sm mt-2 add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
+                  Thêm món
+                </button>
               </div>
-            </div>`;
+            </div>
+          `;
+          menuContainer.appendChild(col);
         });
-
+      
         document.querySelectorAll(".add-to-cart").forEach((button) => {
           button.addEventListener("click", async function () {
             if (!selectedTable) {
               showModal("Vui lòng chọn bàn trước khi thêm món!");
               return;
             }
-
+      
             const itemId = this.getAttribute("data-id");
             const quantityInput = document.querySelector(`.quantity[data-id='${itemId}']`);
             const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
-
+      
             if (isNaN(quantity) || quantity <= 0) {
               showModal("Số lượng phải là số dương!");
               return;
             }
-
+      
             try {
               const response = await fetch("/order/add", {
                 method: "POST",
@@ -345,7 +348,7 @@
                 body: JSON.stringify({ itemId, quantity, tableNumber: selectedTable }),
               });
               const result = await response.json();
-
+      
               if (result.success) {
                 showModal(result.message);
                 updateCart(result.order);
@@ -358,8 +361,7 @@
             }
           });
         });
-      }
-
+      }      
       // Lấy giỏ hàng từ server
       async function fetchCart() {
         if (!selectedTable) return;
@@ -438,7 +440,7 @@
       // Xử lý tìm kiếm
       searchButton.addEventListener("click", function () {
   const query = searchInput.value.toLowerCase();
-  const cards = document.querySelectorAll(".menu-card");
+  const cards = document.querySelectorAll(".menu-wrapper");
 
   cards.forEach((card) => {
     const name = card.querySelector("h5").textContent.toLowerCase();

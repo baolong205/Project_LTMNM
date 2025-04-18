@@ -9,25 +9,37 @@ async function loadDB() {
 }
 
 exports.postLogin = async (req, res) => {
-    const { username, password, role } = req.body; // role gửi từ form (ví dụ: thu ngân, phục vụ, pha chế)
+    const { username, password, role } = req.body; // role từ form: tiếng Việt
     const db = await loadDB();
 
-    const user = db.users.find(u => u.username === username && u.password === password);
-
+    // Tìm user khớp username, password và role tiếng Việt
+    const user = db.users.find(u =>
+        u.username === username &&
+        u.password === password &&
+        u.role === role
+        
+    );
     if (!user) {
-        return res.render('auth/login', { error: 'Sai tên đăng nhập hoặc mật khẩu' });
+        return res.render('auth/login', { error: 'Sai tên đăng nhập, mật khẩu hoặc vai trò không đúng!' });
     }
 
+    // Lưu session với role tiếng Việt
     req.session.user = {
         username: user.username,
-        role: user.role,
-        staffRole: user.staffRole || role || null // nếu chưa có trong db thì lấy từ form
+        role: user.role
     };
 
-    // Điều hướng theo vai trò
-    if (user.role === 'admin') {
-        return res.redirect('/admin/dashboard');
-    } else {
-        return res.redirect('/menu');
+    // Điều hướng theo role tiếng Việt
+    switch (user.role) {
+        case 'Admin':
+            return res.redirect('/admin/menu');
+        case 'Thu ngân':
+            return res.redirect('/payment');
+        case 'Phục vụ':
+            return res.redirect('/order');
+        case 'Pha chế':
+            return res.redirect('/bartender');
+        default:
+            return res.redirect('/');
     }
 };

@@ -11,13 +11,14 @@
       </div>
 
       <div class="col-md-4">
-        <label for="role">Quyền</label>
-        <select name="role" class="form-select" required>
-          <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
-          <option value="cashier" <%= user.role === 'cashier' ? 'selected' : '' %>>Cashier</option>
-          <option value="bartender" <%= user.role === 'bartender' ? 'selected' : '' %>>Bartender</option>
-          <option value="waiter" <%= user.role === 'waiter' ? 'selected' : '' %>>Waiter</option>
-        </select>
+        <label for="role">Vai trò</label>
+        <select id="role" name="role" class="form-control" required>
+          <option disabled value="">-- Chọn vai trò --</option>
+          <option value="waiter" <%= editUser.role === 'waiter' ? 'selected' : '' %>>Phục vụ</option>
+          <option value="cashier" <%= editUser.role === 'cashier' ? 'selected' : '' %>>Thu ngân</option>
+          <option value="bartender" <%= editUser.role === 'bartender' ? 'selected' : '' %>>Pha chế</option>
+          <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>Admin</option>
+        </select>        
       </div>
 
       <div class="col-md-4">

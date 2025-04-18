@@ -164,7 +164,8 @@
       "price": 35000,
       "image": "https://file.hstatic.net/1000075078/file/2_1024x1024.jpg",
       "type": "trà"
-    },{
+    },
+    {
       "id": 16,
       "code": "TS06",
       "name": "Trà sữa khoai môn",
@@ -186,7 +187,6 @@
       "image": "https://xingfuvietnam.vn/wp-content/uploads/2023/02/xingfu-tra-sua-tran-chau-duong-den-2-FILEminimizer.jpg",
       "type": "trà"
     },
-    
     {
       "id": 18,
       "code": "TS02",
@@ -208,7 +208,7 @@
       "price": 40000,
       "image": "https://fruitfarmer.vn/upload/product/sinh-to-bo-2-5058.jpg",
       "type": "nước"
-    },    
+    },
     {
       "id": 20,
       "code": "ST03",
@@ -230,7 +230,7 @@
       "price": 20000,
       "image": "https://hc.com.vn/i/ecommerce/media/ck3208650-cong-thuc-sinh-to-can-tay-3.jpg",
       "type": "nước"
-    },  
+    },
     {
       "id": 22,
       "code": "ST05",
@@ -324,30 +324,22 @@
     {
       "username": "Cao Cường",
       "password": "123456",
-      "role": "admin"
+      "role": "Admin"
     },
     {
       "username": "Bảo Long",
       "password": "123456",
-      "role": "staff",
-      "staffRole": "Thu ngân"
+      "role": "Thu ngân"
     },
     {
       "username": "Văn Sang",
       "password": "123456",
-      "role": "staff",
-      "staffRole": "Phục vụ"
+      "role": "Phục vụ"
     },
     {
       "username": "Hoài Giang",
       "password": "123456",
-      "role": "staff",
-      "staffRole": "Pha chế"
-    },
-    {
-      "username": "cc",
-      "password": "123456",
-      "role": "Thu ngân"
+      "role": "Pha chế"
     }
   ]
 }

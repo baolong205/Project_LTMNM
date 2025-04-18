@@ -2,18 +2,10 @@ const express = require('express');
 const router = express.Router();
 const PaymentHistory = require('../models/paymentHistory');
 const QRCode = require('qrcode');
-
-// Middleware kiểm tra quyền thu ngân
-function isCashier(req, res, next) {
-  if (req.session.user && req.session.user.staffRole === 'Thu ngân') {
-    return next();
-  }
-  req.flash('error', 'Vui lòng đăng nhập với tài khoản Thu ngân.');
-  return res.redirect('/auth/login');
-}
+const { isAuthenticated, isCashier } = require('../middlewares/auth');
 
 // Hiển thị danh sách các bàn cần thanh toán
-router.get('/', isCashier, async (req, res) => {
+router.get('/', isAuthenticated, isCashier, async (req, res) => {
   try {
     const paymentRecords = await PaymentHistory.find({ paymentMethod: 'pending' });
     console.log('✅ Payment records found:', paymentRecords.length, paymentRecords.map(r => ({ tableNumber: r.tableNumber, items: r.items.length })));
@@ -46,11 +38,10 @@ router.get('/', isCashier, async (req, res) => {
 });
 
 // Hiển thị trang thanh toán cho từng bàn
-router.get('/:tableNumber', isCashier, async (req, res) => {
+router.get('/:tableNumber', isAuthenticated, isCashier, async (req, res) => {
   const { tableNumber } = req.params;
 
   try {
-    // Lấy tất cả bản ghi pending cho bàn
     const paymentRecords = await PaymentHistory.find({ tableNumber, paymentMethod: 'pending' });
     console.log('✅ Payment records for table:', tableNumber, paymentRecords.length);
 
@@ -60,7 +51,6 @@ router.get('/:tableNumber', isCashier, async (req, res) => {
       return res.redirect('/payment');
     }
 
-    // Tổng hợp tất cả sản phẩm từ các bản ghi
     const cart = [];
     paymentRecords.forEach(record => {
       if (Array.isArray(record.items) && record.items.length > 0) {
@@ -80,10 +70,8 @@ router.get('/:tableNumber', isCashier, async (req, res) => {
       return res.redirect('/payment');
     }
 
-    // Tính tổng tiền
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    // Lấy lịch sử thanh toán
     const paymentHistory = await PaymentHistory.find({ tableNumber })
       .sort({ createdAt: -1 })
       .lean();
@@ -106,7 +94,7 @@ router.get('/:tableNumber', isCashier, async (req, res) => {
 });
 
 // Tạo mã QR cho thanh toán
-router.post('/generate-qr/:tableNumber', isCashier, async (req, res) => {
+router.post('/generate-qr/:tableNumber', isAuthenticated, isCashier, async (req, res) => {
   const { tableNumber } = req.params;
   const { paymentMethod, total } = req.body;
 
@@ -131,7 +119,7 @@ router.post('/generate-qr/:tableNumber', isCashier, async (req, res) => {
 });
 
 // Xác nhận thanh toán
-router.post('/confirm/:tableNumber', isCashier, async (req, res) => {
+router.post('/confirm/:tableNumber', isAuthenticated, isCashier, async (req, res) => {
   const { tableNumber } = req.params;
   const { paymentMethod } = req.body;
 
@@ -140,14 +128,12 @@ router.post('/confirm/:tableNumber', isCashier, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Phương thức thanh toán không hợp lệ.' });
     }
 
-    // Lấy tất cả bản ghi pending cho bàn
     const paymentRecords = await PaymentHistory.find({ tableNumber, paymentMethod: 'pending' });
     if (!paymentRecords || paymentRecords.length === 0) {
       console.warn('⚠ Không tìm thấy đơn hàng hợp lệ để thanh toán:', tableNumber);
       return res.status(400).json({ success: false, message: 'Không tìm thấy đơn hàng hợp lệ hoặc đã thanh toán.' });
     }
 
-    // Kiểm tra dữ liệu sản phẩm
     let hasValidItems = false;
     for (const record of paymentRecords) {
       if (Array.isArray(record.items) && record.items.length > 0) {
@@ -160,7 +146,6 @@ router.post('/confirm/:tableNumber', isCashier, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Không có sản phẩm hợp lệ để thanh toán.' });
     }
 
-    // Cập nhật tất cả bản ghi pending
     for (const record of paymentRecords) {
       record.paymentMethod = paymentMethod;
       record.createdAt = new Date();
