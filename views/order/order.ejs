@@ -435,14 +435,30 @@
       });
 
       // Xử lý tìm kiếm
+      // Xử lý tìm kiếm
       searchButton.addEventListener("click", function () {
-        const query = searchInput.value.toLowerCase();
-        const cards = document.querySelectorAll(".menu-card");
-        cards.forEach((card) => {
-          const name = card.querySelector("h5").textContent.toLowerCase();
-          card.style.display = name.includes(query) ? "block" : "none";
-        });
+  const query = searchInput.value.toLowerCase();
+  const cards = document.querySelectorAll(".menu-card");
+
+  cards.forEach((card) => {
+    const name = card.querySelector("h5").textContent.toLowerCase();
+
+    // Thay vì dùng display: none, ta thêm/lấy class 'd-none' của Bootstrap
+    if (name.includes(query)) {
+      card.classList.remove("d-none");
+    } else {
+      card.classList.add("d-none");
+    }
+  });
+});
+
+      // Xử lý nhấn Enter để tìm kiếm 
+      searchInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          searchButton.click();
+        }
       });
+
 
       // Xử lý phân loại món
       typeButtons.forEach((button) => {

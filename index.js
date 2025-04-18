@@ -4,7 +4,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const connectDB = require('./config/db');
-
 const app = express();
 
 // ✅ Kết nối MongoDB
