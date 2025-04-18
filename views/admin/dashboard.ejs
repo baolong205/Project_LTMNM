@@ -1,15 +1,304 @@
-<!DOCTYPE html>
-<html lang="vi">
+<%- include('../partials/header') %>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Quản lý Menu - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1a1a2e;
+      font-family: 'Poppins', sans-serif;
+      color: #e0e0e0;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin-top: 3rem;
+      padding: 0 20px;
+    }
+
+    h2.text-primary {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #ff6b6b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background-color: #2a2a3e;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 600;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .card-body {
+      padding: 2.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #c0c0c0;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      background-color: #3a3a4e;
+      border: 1px solid #4a4a6e;
+      border-radius: 12px;
+      color: #e0e0e0;
+      padding: 0.8rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.3);
+      background-color: #3a3a4e;
+      color: #e0e0e0;
+    }
+
+    .btn {
+      border-radius: 30px;
+      padding: 0.8rem 2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-success {
+      background-color: #4ecdc4;
+      border-color: #4ecdc4;
+    }
+
+    .btn-success:hover {
+      background-color: #45b7aa;
+      border-color: #45b7aa;
+      box-shadow: 0 0 15px rgba(78, 205, 196, 0.5);
+    }
+
+    .table {
+      background-color: #2a2a3e;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .table thead th {
+      background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 1.2rem;
+      border: none;
+    }
+
+    .table tbody tr {
+      border-bottom: 1px solid #4a4a6e;
+      transition: background-color 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+      background-color: #3a3a4e;
+    }
+
+    .table tbody td {
+      vertical-align: middle;
+      padding: 1.2rem;
+      color: #e0e0e0;
+    }
+
+    table img {
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid #4a4a6e;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    table img:hover {
+      transform: scale(1.15);
+      border-color: #ff6b6b;
+    }
+
+    /* Updated button styles for Edit and Delete */
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      margin: 0 0.3rem;
+    }
+
+    .edit-btn {
+      background-color: #4ecdc4;
+      border: 1px solid #4ecdc4;
+      color: #1a1a2e;
+    }
+
+    .edit-btn:hover {
+      background-color: #45b7aa;
+      border-color: #45b7aa;
+      box-shadow: 0 0 15px rgba(78, 205, 196, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .edit-btn img {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.3rem;
+    }
+
+    .delete-btn {
+      background-color: #ff4757;
+      border: 1px solid #ff4757;
+      color: #e0e0e0;
+    }
+
+    .delete-btn:hover {
+      background-color: #e63946;
+      border-color: #e63946;
+      box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .delete-btn img {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.3rem;
+    }
+
+    @media (max-width: 768px) {
+      .card-body {
+        padding: 1.8rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+      }
+
+      .table {
+        font-size: 0.9rem;
+      }
+
+      table img {
+        width: 60px;
+        height: 45px;
+      }
+
+      h2.text-primary {
+        font-size: 1.8rem;
+      }
+
+      .action-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Admin Dashboard</h2>
-        <p>Chào mừng bạn đến với trang quản trị. Đây là nơi quản lý toàn bộ hệ thống.</p>
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary">📋 Quản lý món ăn</h2>
+
+  <% if (user && user.role === 'admin') { %>
+    <div class="card mb-4">
+      <div class="card-header"><%= editItem ? " Sửa món ăn" : " Thêm món ăn mới" %></div>
+      <div class="card-body">
+        <form action="<%= editItem ? ('/edit/' + editItem.id) : '/add' %>" method="POST" enctype="multipart/form-data">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Tên món</label>
+              <input type="text" name="name" class="form-control" value="<%= editItem ? editItem.name : '' %>" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Loại</label>
+              <input type="text" name="category" class="form-control" value="<%= editItem ? editItem.category : '' %>" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Giá</label>
+              <input type="number" step="1000" name="price" class="form-control" value="<%= editItem ? editItem.price : '' %>" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Tải ảnh món (chọn 1 trong 2):</label>
+              <input type="file" name="image" class="form-control mb-2">
+            
+              <label class="form-label">Hoặc dán link ảnh:</label>
+              <input type="url" name="imageUrl" class="form-control" placeholder="https://...">
+            </div>            
+          <div class="mt-3 text-end">
+            <button class="btn btn-success"><%= editItem ? "Cập nhật" : "Thêm món" %></button>
+          </div>
+        </form>
+      </div>
     </div>
+  <% } %>
+
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-primary text-center">
+      <tr>
+        <th>Ảnh</th>
+        <th>Tên món</th>
+        <th>Loại</th>
+        <th>Giá</th>
+        <% if (user && user.role === 'admin') { %>
+          <th>Hành động</th>
+        <% } %>
+      </tr>
+    </thead>
+    <tbody>
+      <% menuItems.forEach(item => { %>
+        <tr>
+          <td class="text-center">
+            <% if (item.image && item.image.startsWith('data:image')) { %>
+              <img src="<%- item.image %>" width="80" height="60" style="object-fit: cover;">
+            <% } else if (item.image) { %>
+              <img src="<%= item.image %>" width="80" height="60" style="object-fit: cover;">
+            <% } else { %>
+              <em>Không có</em>
+            <% } %>
+          </td>
+          <td><%= item.name %></td>
+          <td><%= item.category %></td>
+          <td><%= item.price.toLocaleString('vi-VN') %> đ</td>
+          <% if (user && user.role === 'admin') { %>
+            <td class="text-center">
+              <a href="/edit/<%= item.id %>" class="action-btn edit-btn">
+                <img src="https://img.icons8.com/ios-glyphs/30/ffffff/edit--v1.png" alt="Edit Icon">
+                SỬA
+              </a>
+              <a href="/delete/<%= item.id %>" class="action-btn delete-btn" onclick="return confirm('Xoá món này?')">
+                <img src="https://img.icons8.com/ios-glyphs/30/ffffff/trash--v1.png" alt="Delete Icon">
+                XOÁ
+              </a>
+            </td>
+          <% } %>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
 </body>
-</html>
+<%- include('../partials/footer') %>
