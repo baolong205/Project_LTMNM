@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>Thêm nguyên liệu</title>
+  <title>Thêm Nguyên Liệu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -10,7 +10,9 @@
       margin: 0;
       font-family: "Segoe UI", sans-serif;
       background-color: #e6d2b5;
+      color: #333;
     }
+    
     header {
       background-color: #5d2906;
       color: white;
@@ -18,52 +20,66 @@
       align-items: center;
       justify-content: space-between;
       padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
+    
     .nav-left, .nav-right {
       display: flex;
       align-items: center;
       gap: 1.5rem;
     }
+    
     .nav-title {
       font-size: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: 600;
     }
     
     .page-title {
-      padding: 1rem;
+      padding: 1.5rem;
       background-color: #e6d2b5;
       text-align: center;
       font-weight: bold;
+      color: #5d2906;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #d1b795;
     }
     
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background-color: #f3e9d9;
+      border-radius: 8px;
       padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     
     .form-group label {
       display: block;
       margin-bottom: 5px;
-      font-weight: bold;
+      font-weight: 600;
+      color: #5d2906;
     }
     
-    .form-group input {
+    .form-control {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #d1b795;
       border-radius: 4px;
+      background-color: #fff;
+      font-size: 16px;
+      box-sizing: border-box;
     }
     
-    .btn-group {
+    .form-buttons {
       display: flex;
-      gap: 10px;
+      justify-content: space-between;
       margin-top: 20px;
     }
     
@@ -71,8 +87,12 @@
       padding: 10px 20px;
       border: none;
       border-radius: 4px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
     .btn-primary {
@@ -80,18 +100,25 @@
       color: white;
     }
     
-    .btn-secondary {
-      background-color: #ccc;
-      color: #333;
+    .btn-primary:hover {
+      background-color: #7a3409;
+    }
+    
+    .btn-cancel {
+      background-color: #c25e5e;
+      color: white;
+    }
+    
+    .btn-cancel:hover {
+      background-color: #d17676;
     }
     
     footer {
-      padding: 1rem;
+      padding: 1.5rem;
       text-align: center;
-      background-color: #e6d2b5;
-      color: #666;
+      background-color: #5d2906;
+      color: #e6d2b5;
       font-size: 0.9rem;
-      margin-top: 2rem;
     }
   </style>
 </head>
@@ -99,48 +126,44 @@
 
 <header>
   <div class="nav-left">
-    <i class="fas fa-bars"></i>
     <div class="nav-title">
       <i class="fas fa-warehouse"></i> Quản lý Kho
     </div>
   </div>
   <div class="nav-right">
-    <i class="fas fa-wifi"></i>
-    <i class="fas fa-question-circle"></i>
-    <i class="fas fa-power-off"></i>
-    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %></div>
+    <div><i class="fas fa-user"></i> <%= typeof user !== 'undefined' ? user.name : 'Nhân viên' %></div>
   </div>
 </header>
 
 <div class="page-title">
-  <h3>Thêm nguyên liệu mới</h3>
+  <h2>Thêm Nguyên Liệu Mới</h2>
 </div>
 
-<div class="container">
+<div class="form-container">
   <form action="/inventory/add" method="POST">
     <div class="form-group">
       <label for="name">Tên nguyên liệu</label>
-      <input type="text" id="name" name="name" required>
+      <input type="text" id="name" name="name" class="form-control" required>
     </div>
     
     <div class="form-group">
       <label for="quantity">Số lượng</label>
-      <input type="number" id="quantity" name="quantity" min="0" step="0.01" required>
+      <input type="number" id="quantity" name="quantity" class="form-control" required min="0" step="0.01">
     </div>
     
     <div class="form-group">
       <label for="unit">Đơn vị</label>
-      <input type="text" id="unit" name="unit" required>
+      <input type="text" id="unit" name="unit" class="form-control" value="Đơn vị">
     </div>
     
     <div class="form-group">
       <label for="price">Giá nhập (VND)</label>
-      <input type="number" id="price" name="price" min="0" required>
+      <input type="number" id="price" name="price" class="form-control" required min="0">
     </div>
     
-    <div class="btn-group">
-      <button type="submit" class="btn btn-primary">Lưu</button>
-      <a href="/inventory" class="btn btn-secondary">Hủy</a>
+    <div class="form-buttons">
+      <a href="/inventory" class="btn btn-cancel"><i class="fas fa-times"></i> Hủy</a>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm nguyên liệu</button>
     </div>
   </form>
 </div>

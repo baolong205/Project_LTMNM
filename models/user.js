@@ -1,26 +1,9 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
-  role: {
-    type: String,
-    enum: ['admin', 'staff', 'cashier', 'waiter', 'bartender'],
-    default: 'staff'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['admin', 'staff'], default: 'staff' } // Phân quyền
 });
 
-// Mã hoá mật khẩu trước khi lưu
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
-
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);

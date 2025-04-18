@@ -46,6 +46,50 @@
     },
     {
       "id": 5,
+      "code": "CF01",
+      "name": "Cà phê phin",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 22000,
+      "image": "https://lavencoffee.com/data/cms-image/Ca%20phe%20phin%20viet%20nam.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 6,
+      "code": "CF02",
+      "name": "Cà phê Latte",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 25000,
+      "image": "https://www.cubes-asia.com/storage/blogs/2023/cafe-latte.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 7,
+      "code": "CF03",
+      "name": "Cà phê Mocha",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000,
+      "image": "https://cdn.tgdd.vn/2021/12/CookDish/ca-phe-mocha-la-gi-dac-diem-cua-ca-phe-mocha-va-cach-pha-ca-avt-1200x676.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 8,
+      "code": "CF04",
+      "name": "Cà phê Truyền thống",
+      "group": "Cà phê",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 15000,
+      "image": "https://fromcaudat.com/wp-content/uploads/2023/01/ca-phe-truyen-thong-2.jpg.jpg",
+      "type": "cà phê"
+    },
+    {
+      "id": 9,
       "code": "TR01",
       "name": "Trà đào",
       "group": "Trà",
@@ -56,7 +100,7 @@
       "type": "trà"
     },
     {
-      "id": 6,
+      "id": 10,
       "code": "TR02",
       "name": "Trà chanh mật ong",
       "group": "Trà",
@@ -67,7 +111,7 @@
       "type": "trà"
     },
     {
-      "id": 7,
+      "id": 11,
       "code": "TS01",
       "name": "Trà sữa trân châu",
       "group": "Trà sữa",
@@ -78,7 +122,7 @@
       "type": "trà"
     },
     {
-      "id": 8,
+      "id": 12,
       "code": "TS02",
       "name": "Trà sữa matcha",
       "group": "Trà sữa",
@@ -89,7 +133,73 @@
       "type": "trà"
     },
     {
-      "id": 9,
+      "id": 13,
+      "code": "TR01",
+      "name": "Trà đào",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 30000,
+      "image": "https://toongcenter.vn/storage/photos/shares/meo%20pha%20che/tra%20dao%20cam%20s%E1%BA%A3/1.jpg",
+      "type": "trà"
+    },
+    {
+      "id": 14,
+      "code": "TR02",
+      "name": "Trà mận",
+      "group": "Trà",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 27000,
+      "image": "https://lypham.vn/wp-content/uploads/2024/09/cach-lam-tra-man-ha-noi.jpg",
+      "type": "trà"
+    },
+    {
+      "id": 15,
+      "code": "TS04",
+      "name": "Trà sữa matcha",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://file.hstatic.net/1000075078/file/2_1024x1024.jpg",
+      "type": "trà"
+    },{
+      "id": 16,
+      "code": "TS06",
+      "name": "Trà sữa khoai môn",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 33000,
+      "image": "https://viettuantea.vn/wp-content/uploads/2020/11/cong-thuc-pha-tra-sua-khoai-mon.jpg",
+      "type": "trà"
+    },
+    {
+      "id": 17,
+      "code": "TS01",
+      "name": "Trà sữa trân châu",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 35000,
+      "image": "https://xingfuvietnam.vn/wp-content/uploads/2023/02/xingfu-tra-sua-tran-chau-duong-den-2-FILEminimizer.jpg",
+      "type": "trà"
+    },
+    
+    {
+      "id": 18,
+      "code": "TS02",
+      "name": "Trà sữa full topping",
+      "group": "Trà sữa",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 38000,
+      "image": "https://vungtaureview.vn/attachments/1ab74c13-d775-4429-840f-eb277bc7c9bd-jpeg.2651/",
+      "type": "trà"
+    },
+    {
+      "id": 19,
       "code": "ST01",
       "name": "Sinh tố bơ",
       "group": "Sinh tố",
@@ -98,16 +208,115 @@
       "price": 40000,
       "image": "https://fruitfarmer.vn/upload/product/sinh-to-bo-2-5058.jpg",
       "type": "nước"
+    },    
+    {
+      "id": 20,
+      "code": "ST03",
+      "name": "Sinh tố chuối",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 40000,
+      "image": "https://tiki.vn/blog/wp-content/uploads/2023/04/cach-lam-sinh-to-chuoi-1.png",
+      "type": "nước"
     },
     {
-      "id": 10,
+      "id": 21,
+      "code": "ST02",
+      "name": "Sinh tố cần tây",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 20000,
+      "image": "https://hc.com.vn/i/ecommerce/media/ck3208650-cong-thuc-sinh-to-can-tay-3.jpg",
+      "type": "nước"
+    },  
+    {
+      "id": 22,
+      "code": "ST05",
+      "name": "Sinh tố cà rốt",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 40000,
+      "image": "https://cdn.tgdd.vn/Files/2019/11/06/1215973/cach-lam-sinh-to-ca-rot-ngon-don-gian-bang-may-xay-tai-nha-201911060908001999.jpg",
+      "type": "nước"
+    },
+    {
+      "id": 23,
+      "code": "ST03",
+      "name": "Matcha Latte ",
+      "group": "Sinh tố",
+      "category": "Đồ uống",
+      "unit": "Ly",
+      "price": 40000,
+      "image": "https://cdn.loveandlemons.com/wp-content/uploads/2023/06/iced-matcha-latte.jpg",
+      "type": "nước"
+    },
+    {
+      "id": 24,
       "code": "TA01",
-      "name": "Bánh mì sandwich",
+      "name": "Bánh mì Red Velvet",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 20000,
+      "image": "https://bizweb.dktcdn.net/100/438/465/files/maxresdefault.jpg?v=1698283436051",
+      "type": "bánh"
+    },
+    {
+      "id": 25,
+      "code": "TA01",
+      "name": "Bánh mì ",
       "group": "Thức ăn nhanh",
       "category": "Thức ăn",
       "unit": "Phần",
       "price": 20000,
       "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgjPUq-4Zqau9DePFc0hbBBPfk837j5mHRQQ&s",
+      "type": "bánh"
+    },
+    {
+      "id": 26,
+      "code": "TA02",
+      "name": "Bánh mì Tiramisu",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 43000,
+      "image": "https://cdnphoto.dantri.com.vn/55gD-O4Gvg8r7ccR2wHwrsrBhDo=/thumb_w/960/2021/05/10/bm-1-1620615515163.jpg",
+      "type": "bánh"
+    },
+    {
+      "id": 27,
+      "code": "TA03",
+      "name": "Bánh mì Matcha",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 35000,
+      "image": "https://cdn.tgdd.vn/Files/2021/08/12/1374802/cach-lam-banh-bong-lan-kem-matcha-thom-ngon-cuc-de-lam-202201131326405795.jpg",
+      "type": "bánh"
+    },
+    {
+      "id": 28,
+      "code": "TA04",
+      "name": "Bánh mì Dâu tây",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 50000,
+      "image": "https://cdn.tgdd.vn/2020/11/CookProduct/1260-1200x643-48.jpg",
+      "type": "bánh"
+    },
+    {
+      "id": 29,
+      "code": "TA05",
+      "name": "Bánh mì Cốm",
+      "group": "Thức ăn nhanh",
+      "category": "Thức ăn",
+      "unit": "Phần",
+      "price": 15000,
+      "image": "https://comthanhan.com/wp-content/uploads/2023/11/banh-com-tuoi-dac-san-me-tri-ha-noi.jpg",
       "type": "bánh"
     }
   ],

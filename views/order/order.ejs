@@ -224,10 +224,8 @@
           <span id="totalPrice">0 VND</span>
         </div>
         <button class="btn btn-primary w-100 mt-3" id="orderButton">🧾 Đặt món</button>
-      </div>
-    </div>
 
-    <!-- Chọn bàn -->
+         <!-- Chọn bàn -->
     <div class="mt-5">
       <h4>🪑 Chọn bàn</h4>
       <div class="d-flex flex-wrap gap-2">
@@ -236,6 +234,9 @@
         <% } %>
       </div>
     </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Modal thông báo -->
@@ -314,7 +315,7 @@
                     <input type="number" class="form-control text-center quantity" min="1" value="1" data-id="${item.id}" style="width: 80px;">
                   </div>
                   <button class="btn btn-primary btn-sm mt-2 add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
-                    Thêm
+                    Thêm món
                   </button>
                 </div>
               </div>
@@ -404,7 +405,6 @@
         }
         totalPrice.textContent = `${total.toLocaleString('vi-VN')} VND`;
       }
-
       // Xử lý nút "Order"
       orderButton.addEventListener("click", async function () {
         if (!selectedTable) {
@@ -435,14 +435,30 @@
       });
 
       // Xử lý tìm kiếm
+      // Xử lý tìm kiếm
       searchButton.addEventListener("click", function () {
-        const query = searchInput.value.toLowerCase();
-        const cards = document.querySelectorAll(".menu-card");
-        cards.forEach((card) => {
-          const name = card.querySelector("h5").textContent.toLowerCase();
-          card.style.display = name.includes(query) ? "block" : "none";
-        });
+  const query = searchInput.value.toLowerCase();
+  const cards = document.querySelectorAll(".menu-card");
+
+  cards.forEach((card) => {
+    const name = card.querySelector("h5").textContent.toLowerCase();
+
+    // Thay vì dùng display: none, ta thêm/lấy class 'd-none' của Bootstrap
+    if (name.includes(query)) {
+      card.classList.remove("d-none");
+    } else {
+      card.classList.add("d-none");
+    }
+  });
+});
+
+      // Xử lý nhấn Enter để tìm kiếm 
+      searchInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          searchButton.click();
+        }
       });
+
 
       // Xử lý phân loại món
       typeButtons.forEach((button) => {
